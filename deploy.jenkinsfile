@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  stages {
+    stage('Install Jar') {
+        steps {
+            copyArtifacts filter: '**/TrainingApp.jar', projectName: 'build'
+        }
+    }
+    stage('Run Jar') {
+        steps {
+            sh "java -jar ${WORKSPACE}/target/TrainingApp.jar"
+        }
+    }
+  }
+}
