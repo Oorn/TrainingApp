@@ -6,4 +6,6 @@ public interface CredentialsService {
     boolean validateUsernamePassword(String username, String password);
     boolean updateCredentials (UpdateCredentialsRequest request);
 
+    String generateUsername(String firstName, String lastName);
+
 }
