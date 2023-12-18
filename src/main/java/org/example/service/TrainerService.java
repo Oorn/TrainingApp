@@ -6,7 +6,7 @@ import org.example.requests_responses.trainer.UpdateTrainerProfileRequest;
 import org.example.requests_responses.user.CredentialsResponse;
 
 public interface TrainerService {
-    CredentialsResponse createTrainer(CreateTrainerRequest request);
-    TrainerFullInfoResponse getTrainerProfile(String username);
-    TrainerFullInfoResponse updateTrainerProfile(UpdateTrainerProfileRequest request);
+    CredentialsResponse create(CreateTrainerRequest request);
+    TrainerFullInfoResponse get(String username);
+    TrainerFullInfoResponse update(UpdateTrainerProfileRequest request);
 }

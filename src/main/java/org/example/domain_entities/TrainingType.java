@@ -4,17 +4,15 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @Builder
 public class TrainingType {
 
-    private  Long id;
+    private long id;
 
     private String trainingType;
 
-    private Boolean isRemoved = false;
+    private boolean isRemoved;
 
     private Set<Trainer> trainers;
 }

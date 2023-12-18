@@ -6,7 +6,7 @@ import org.example.requests_responses.training.GetTrainerTrainingsRequest;
 import org.example.requests_responses.training.MultipleTrainingInfoResponse;
 
 public interface TrainingService {
-    boolean addTraining(CreateTrainingRequest request);
-    MultipleTrainingInfoResponse getTraineeTrainings(GetTraineeTrainingsRequest request);
-    MultipleTrainingInfoResponse getTrainerTrainings(GetTrainerTrainingsRequest request);
+    boolean add(CreateTrainingRequest request);
+    MultipleTrainingInfoResponse getByTrainee(GetTraineeTrainingsRequest request);
+    MultipleTrainingInfoResponse getByTrainer(GetTrainerTrainingsRequest request);
 }

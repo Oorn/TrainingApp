@@ -6,9 +6,6 @@ import java.util.Date;
 
 @Data
 @Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class GetTraineeTrainingsRequest {
     private String username;
 

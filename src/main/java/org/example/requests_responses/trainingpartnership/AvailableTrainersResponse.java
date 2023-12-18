@@ -7,9 +7,6 @@ import java.util.List;
 
 @Data
 @Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class AvailableTrainersResponse {
     private List<TrainerShortInfoResponse> trainers;
 }

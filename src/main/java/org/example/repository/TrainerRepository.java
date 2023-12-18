@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrainerRepository {
-    Optional<Trainer> getTrainerByUsername(String Username);
-    List<Trainer> getAllTrainers();
-    Trainer saveTrainer(Trainer entity);
+    Optional<Trainer> getByUsername(String Username);
+    List<Trainer> getAll();
+    Trainer save(Trainer entity);
 }

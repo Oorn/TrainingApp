@@ -6,9 +6,6 @@ import java.util.List;
 
 @Data
 @Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class UpdateTrainingPartnershipListRequest {
     private String username;
 

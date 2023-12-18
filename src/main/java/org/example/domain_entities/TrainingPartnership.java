@@ -4,19 +4,17 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @Builder
 public class TrainingPartnership {
 
-    private  Long id;
+    private long id;
 
     private Trainer trainer;
 
     private Trainee trainee;
 
-    private Boolean isRemoved = false;
+    private boolean isRemoved;
 
     private Set<Training> trainings;
 

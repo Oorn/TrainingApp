@@ -6,13 +6,11 @@ import java.util.Date;
 import java.util.Set;
 
 
-@Getter
-@Setter
-@RequiredArgsConstructor
 @Builder
+@Data
 public class Trainee {
 
-    private  Long id;
+    private  long id;
 
     private Date dateOfBirth;
 
@@ -20,7 +18,7 @@ public class Trainee {
 
     private User user;
 
-    private Boolean isRemoved = false;
+    private boolean isRemoved;
 
     private Set<TrainingPartnership> trainingPartnerships;
 

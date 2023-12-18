@@ -4,13 +4,11 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @Builder
 public class Training {
 
-    private Long id;
+    private long id;
 
     private TrainingPartnership trainingPartnership;
 
@@ -20,5 +18,5 @@ public class Training {
 
     private Date trainingDateTo;
 
-    private Boolean isRemoved = false;
+    private boolean isRemoved;
 }

@@ -4,9 +4,6 @@ import lombok.*;
 
 @Data
 @Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class UpdateTrainerProfileRequest {
     private String Username;
 

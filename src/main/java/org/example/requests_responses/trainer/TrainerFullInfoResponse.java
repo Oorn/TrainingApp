@@ -7,9 +7,6 @@ import java.util.List;
 
 @Data
 @Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class TrainerFullInfoResponse {
     private String username;
 

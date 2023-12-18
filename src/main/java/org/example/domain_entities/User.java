@@ -4,13 +4,11 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @Builder
 public class User {
 
-    private  Long id;
+    private long id;
 
     private String firstName;
 
@@ -22,9 +20,9 @@ public class User {
 
     private String passwordSalt;
 
-    private Boolean isActive;
+    private boolean isActive;
 
-    private Boolean isRemoved = false;
+    private boolean isRemoved;
 
     private Trainer trainerProfile;
 
