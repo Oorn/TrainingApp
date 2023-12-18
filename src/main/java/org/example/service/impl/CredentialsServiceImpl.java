@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class CredentialsServiceImpl implements CredentialsService {
 
     @Setter(onMethod_={@Autowired})
-    CredentialsServiceUtils credentialsServiceUtils;
+    private CredentialsServiceUtils credentialsServiceUtils;
 
     @Setter(onMethod_={@Autowired})
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public boolean validateUsernamePassword(String username, String password) {
@@ -38,12 +38,9 @@ public class CredentialsServiceImpl implements CredentialsService {
         if (!credentialsServiceUtils.validatePasswordRequirements(request.getNewPassword()))
             return false; //password does not meet requirements //todo add exceptions to indicate exact problem
         //checks passed, may update password
-        String newSalt = credentialsServiceUtils.generateRandomSalt();
-        String newPasswordHashed = credentialsServiceUtils.generatePasswordHash(request.getNewPassword() + newSalt);
 
         User user = userRepository.get(request.getUsername()).orElseThrow();
-        user.setPassword(newPasswordHashed);
-        user.setPasswordSalt(newSalt);
+        credentialsServiceUtils.setUserPassword(user, request.getNewPassword());
         userRepository.save(user);
         return true;
     }
