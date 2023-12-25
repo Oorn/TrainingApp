@@ -28,6 +28,7 @@ public class CreateTraineeRequestConverter implements Converter<CreateTraineeReq
                 .dateOfBirth(request.getDateOfBirth())
                 .trainingPartnerships(new HashSet<>())
                 .user(newUser)
+                .isRemoved(false)
                 .build();
         newUser.setTraineeProfile(newTrainee);
         return newTrainee;

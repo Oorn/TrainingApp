@@ -9,7 +9,14 @@ public interface TrainingPartnershipRepository {
 
     List<TrainingPartnership> getByTrainerName(String username);
 
-    List<TrainingPartnership> save(List<TrainingPartnership> partnerships);
+    List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<String> trainerUsernames);
 
+    List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<String> traineeUsernames);
+
+    TrainingPartnership save(TrainingPartnership entity);
+
+    void deleteAllForTrainee(String username);
+
+    void deleteAllForTrainer(String username);
 
 }

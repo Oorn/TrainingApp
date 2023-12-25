@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import org.example.domain_entities.Trainee;
 import org.example.domain_entities.User;
 
 import java.util.List;
@@ -11,5 +10,7 @@ public interface UserRepository {
     Optional<User> get(String username);
 
     List<User> getAllByPrefix(String usernamePrefix);
-    Trainee save(User entity);
+    User save(User entity);
+
+    void delete(String username);
 }
