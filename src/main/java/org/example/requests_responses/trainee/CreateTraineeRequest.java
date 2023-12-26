@@ -2,6 +2,7 @@ package org.example.requests_responses.trainee;
 
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Date;
 
 
@@ -13,7 +14,7 @@ public class CreateTraineeRequest {
 
     private String lastName;
 
-    private Date dateOfBirth;
+    private Instant dateOfBirth;
 
     private String address;
 }

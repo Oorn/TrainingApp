@@ -2,6 +2,7 @@ package org.example.domain_entities;
 
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ public class Trainee {
 
     private  long id;
 
-    private Date dateOfBirth;
+    private Instant dateOfBirth;
 
     private String Address;
 

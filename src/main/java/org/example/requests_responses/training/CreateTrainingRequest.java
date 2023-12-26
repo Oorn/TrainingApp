@@ -3,6 +3,7 @@ package org.example.requests_responses.training;
 import lombok.*;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -14,7 +15,7 @@ public class CreateTrainingRequest {
 
     private String name;
 
-    private Date date;
+    private Instant date;
 
     private String type;
 

@@ -2,6 +2,7 @@ package org.example.domain_entities;
 
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -14,9 +15,9 @@ public class Training {
 
     private String trainingName;
 
-    private Date trainingDateFrom;
+    private Instant trainingDateFrom;
 
-    private Date trainingDateTo;
+    private Instant trainingDateTo;
 
     private boolean isRemoved;
 }

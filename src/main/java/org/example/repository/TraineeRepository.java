@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface TraineeRepository {
     Optional<Trainee> get(String username);
     Trainee save(Trainee entity);
-    void delete(String username);
+    //void delete(String username);
 
 }

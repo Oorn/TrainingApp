@@ -10,6 +10,6 @@ public interface TrainerRepository {
     List<Trainer> getAll();
     Trainer save(Trainer entity);
 
-    void delete(String username);
+    //void delete(String username);
 
 }

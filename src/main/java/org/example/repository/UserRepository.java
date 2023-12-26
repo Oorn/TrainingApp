@@ -12,5 +12,5 @@ public interface UserRepository {
     List<User> getAllByPrefix(String usernamePrefix);
     User save(User entity);
 
-    void delete(String username);
+    //void delete(String username);
 }

@@ -29,9 +29,6 @@ public class TraineeServiceImpl implements TraineeService {
     private CredentialsService credentialsService;
 
     @Setter(onMethod_={@Autowired})
-    private UserRepository userRepository;
-
-    @Setter(onMethod_={@Autowired})
     private TraineeRepository traineeRepository;
 
     @Setter(onMethod_={@Autowired})
@@ -90,6 +87,11 @@ public class TraineeServiceImpl implements TraineeService {
         if (trainee == null)
             return; //todo throw not found exception if null
         trainee.setRemoved(true);
+        trainee.getUser().setRemoved(true);
+        trainee.getTrainingPartnerships().forEach(t->t.setRemoved(true));
+        trainee.getTrainingPartnerships().stream().
+                flatMap(t->t.getTrainings().stream()).
+                forEach(t->t.setRemoved(true));
 
         traineeRepository.save(trainee);
     }

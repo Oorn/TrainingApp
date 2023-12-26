@@ -62,7 +62,7 @@ public class TraineeRepositoryImpl implements TraineeRepository {
 
     }
 
-    @Override
+    /*@Override
     public void delete(String username) {
         Trainee oldTrainee = TraineeMap.get(username);
         if (oldTrainee == null)
@@ -70,5 +70,5 @@ public class TraineeRepositoryImpl implements TraineeRepository {
         oldTrainee.setRemoved(true);
         userRepository.delete(username);
         trainingPartnershipRepository.deleteAllForTrainee(username);
-    }
+    }*/
 }

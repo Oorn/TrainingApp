@@ -3,6 +3,7 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.Setter;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
+import org.example.requests_responses.user.CredentialsResponse;
 import org.example.service.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,8 @@ public class PingController {
     @PostMapping("/test-create")
     @Operation(summary = "test create Trainee")
     public ResponseEntity<Object> testCreateTrainee(@RequestBody CreateTraineeRequest request){
-        return new ResponseEntity<>(traineeService.create(request), HttpStatus.OK);
+        CredentialsResponse result = traineeService.create(request);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
 

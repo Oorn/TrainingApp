@@ -1,4 +1,4 @@
-package org.example.coverters;
+package org.example.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.example.domain_entities.Trainer;

@@ -2,6 +2,8 @@ package org.example.repository.impl;
 
 import lombok.Setter;
 import org.apache.commons.collections.map.MultiKeyMap;
+import org.example.domain_entities.Trainee;
+import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
 import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
@@ -33,6 +35,15 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
 
 
     @Override
+    public Optional<TrainingPartnership> getByTraineeTrainer(String traineeName, String trainerName) {
+        Set<TrainingPartnership> partnershipsByTrainee = mapByTrainee.get(traineeName);
+        return partnershipsByTrainee.stream()
+                .filter(t->t.getTrainer().getUser().getUserName().equals(traineeName))
+                .filter(t->!t.isRemoved())
+                .findAny();
+    }
+
+    @Override
     public List<TrainingPartnership> getByTraineeName(String username) {
         Set<TrainingPartnership> mapValue = mapByTrainee.get(username);
         if (mapValue == null)
@@ -53,63 +64,64 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
     }
 
     @Override
-    public List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<String> trainers) {
+    public List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<Trainer> trainers) {
+        Trainee trainee = traineeRepository.get(username).orElseThrow();
         //should happen only on new trainee creation
         Set<TrainingPartnership> oldMapValue = mapByTrainee.computeIfAbsent(username, k -> new HashSet<>());
 
         //remove partnerships that are no longer present
         oldMapValue.stream()
-                .filter(tp -> !trainers.contains(tp.getTrainer().getUser().getUserName()))
+                .filter(tp -> !trainers.contains(tp.getTrainer()))
                 .forEach(tp -> tp.setRemoved(true));
         //update removed status of re-added partnerships
         oldMapValue.stream()
-                .filter(tp -> trainers.contains(tp.getTrainer().getUser().getUserName()))
+                .filter(tp -> trainers.contains(tp.getTrainer()))
                 .forEach( tp -> {
                     tp.setRemoved(false);
-                    trainers.remove(tp.getTrainer().getUser().getUserName()); //so that trainers only contains trainers whose partnerships we still need to create
+                    trainers.remove(tp.getTrainer()); //so that trainers only contains trainers whose partnerships we still need to create
                 });
         //add new partnerships
-        trainers.forEach(t -> {
-            TrainingPartnership tp = TrainingPartnership.builder()
-                    .trainee(traineeRepository.get(username).orElseThrow())
-                    .trainer(trainerRepository.get(t).orElseThrow())
-                    .isRemoved(false)
-                    .trainings(new HashSet<>())
-                    .build();
-            save(tp);
 
-        });
+        trainers.stream()
+                .map(t -> TrainingPartnership.builder()
+                        .trainee(trainee)
+                        .trainer(t)
+                        .isRemoved(false)
+                        .trainings(new HashSet<>())
+                        .build())
+                .collect(Collectors.toList()).forEach(this::save); //collect is present so that all partnerships can throw exceptions before saving starts
+        //todo - remove collection trickery as mapping can no longer throw exceptions
         return getByTraineeName(username);
 
     }
 
     @Override
-    public List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<String> trainees) {
+    public List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<Trainee> trainees) {
+        Trainer trainer = trainerRepository.get(username).orElseThrow();
         //should happen only on new trainee creation
         Set<TrainingPartnership> oldMapValue = mapByTrainer.computeIfAbsent(username, k -> new HashSet<>());
 
         //remove partnerships that are no longer present
         oldMapValue.stream()
-                .filter(tp -> !trainees.contains(tp.getTrainee().getUser().getUserName()))
+                .filter(tp -> !trainees.contains(tp.getTrainee()))
                 .forEach(tp -> tp.setRemoved(true));
         //update removed status of re-added partnerships
         oldMapValue.stream()
-                .filter(tp -> trainees.contains(tp.getTrainee().getUser().getUserName()))
+                .filter(tp -> trainees.contains(tp.getTrainee()))
                 .forEach( tp -> {
                     tp.setRemoved(false);
-                    trainees.remove(tp.getTrainee().getUser().getUserName()); //so that trainers only contains trainers whose partnerships we still need to create
+                    trainees.remove(tp.getTrainee()); //so that trainers only contains trainers whose partnerships we still need to create
                 });
         //add new partnerships
-        trainees.forEach(t -> {
-            TrainingPartnership tp = TrainingPartnership.builder()
-                    .trainee(traineeRepository.get(t).orElseThrow())
-                    .trainer(trainerRepository.get(username).orElseThrow())
-                    .isRemoved(false)
-                    .trainings(new HashSet<>())
-                    .build();
-            save(tp);
-
-        });
+        trainees.stream()
+                .map(t -> TrainingPartnership.builder()
+                        .trainee(t)
+                        .trainer(trainer)
+                        .isRemoved(false)
+                        .trainings(new HashSet<>())
+                        .build()).
+                collect(Collectors.toList()).forEach(this::save);//collect is present so that all partnerships can throw exceptions before saving starts
+        //todo - remove collection trickery as mapping can no longer throw exceptions
         return getByTrainerName(username);
     }
 
@@ -119,18 +131,20 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
             return null;
         if (traineeRepository.get(entity.getTrainee().getUser().getUserName()).isEmpty())
             return null;
+        entity.getTrainer().getTrainingPartnerships().add(entity);
+        entity.getTrainee().getTrainingPartnerships().add(entity);
         entity.setId(idProvider.provideIdentity(TrainingPartnership.class));
         mapByTrainer.computeIfAbsent(entity.getTrainer().getUser().getUserName(), k -> new HashSet<>()).add(entity);
         mapByTrainee.computeIfAbsent(entity.getTrainee().getUser().getUserName(), k -> new HashSet<>()).add(entity);
         return entity;
     }
 
-    @Override
+    /*@Override
     public void deleteAllForTrainee(String username) {
         updateAndReturnListForTrainee(username, new ArrayList<>());
     }
     @Override
     public void deleteAllForTrainer(String username) {
         updateAndReturnListForTrainer(username, new ArrayList<>());
-    }
+    }*/
 }

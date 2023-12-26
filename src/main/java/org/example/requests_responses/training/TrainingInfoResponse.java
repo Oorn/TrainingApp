@@ -2,6 +2,8 @@ package org.example.requests_responses.training;
 
 import lombok.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -15,5 +17,7 @@ public class TrainingInfoResponse {
 
     private String type;
 
-    private Date date;
+    private Instant date;
+
+    private Duration duration;
 }

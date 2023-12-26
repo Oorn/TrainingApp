@@ -4,8 +4,10 @@ import lombok.Setter;
 import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
+import org.example.domain_entities.TrainingType;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
+import org.example.repository.TrainingTypeRepository;
 import org.example.repository.UserRepository;
 import org.example.service.IdentityProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ public class TrainerRepositoryImpl implements TrainerRepository {
 
     @Setter(onMethod_={@Autowired})
     private TrainingPartnershipRepository trainingPartnershipRepository;
+
 
     @Setter(onMethod_={@Autowired})
     private UserRepository userRepository;
@@ -57,6 +60,7 @@ public class TrainerRepositoryImpl implements TrainerRepository {
                 //illegal state, creating user with non-empty partnerships
                 throw new IllegalStateException(); //todo better exception
             entity.setId(idProvider.provideIdentity(Trainer.class));
+            entity.getSpecialization().getTrainers().add(entity);
             TrainerMap.put(entity.getUser().getUserName(), entity);
             userRepository.save(entity.getUser());
             trainingPartnershipRepository.updateAndReturnListForTrainer(entity.getUser().getUserName(), new ArrayList<>());
@@ -70,7 +74,7 @@ public class TrainerRepositoryImpl implements TrainerRepository {
         throw new IllegalStateException(); //todo better exception
     }
 
-    @Override
+    /*@Override
     public void delete(String username) {
         Trainer oldTrainer = TrainerMap.get(username);
         if (oldTrainer == null)
@@ -79,5 +83,5 @@ public class TrainerRepositoryImpl implements TrainerRepository {
         userRepository.delete(username);
         trainingPartnershipRepository.deleteAllForTrainer(username);
 
-    }
+    }*/
 }

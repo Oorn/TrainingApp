@@ -62,10 +62,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     }
 
-    @Override
+    /*@Override
     public void delete(String username) {
         User oldUser = userMap.get(username);
         if (oldUser != null)
             oldUser.setRemoved(true);
-    }
+    }*/
 }

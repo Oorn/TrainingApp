@@ -1,4 +1,4 @@
-package org.example.coverters;
+package org.example.converters;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -28,6 +28,8 @@ public class TraineeFullInfoResponseConverter implements Converter<Trainee, Trai
                 .lastName(trainee.getUser().getLastName())
                 .username(trainee.getUser().getUserName())
                 .trainersList(trainee.getTrainingPartnerships().stream()
+                        .filter(t -> !t.isRemoved())
+                        .filter(t -> t.getTrainer().getUser().isActive())
                         .map(p->converter.convert(p.getTrainer(), TrainerShortInfoResponse.class))
                         .collect(Collectors.toList()))
                 .build();

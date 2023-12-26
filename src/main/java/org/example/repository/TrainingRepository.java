@@ -9,5 +9,5 @@ public interface TrainingRepository {
     Training save(Training training);
     List<Training> getTrainingsByFilter(TrainingSearchFilter searchFilter);
 
-    void delete(Training training);
+    //void delete(Training training);
 }
