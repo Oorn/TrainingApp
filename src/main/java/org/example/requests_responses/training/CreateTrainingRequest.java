@@ -17,7 +17,5 @@ public class CreateTrainingRequest {
 
     private Instant date;
 
-    private String type;
-
     private Duration duration;
 }

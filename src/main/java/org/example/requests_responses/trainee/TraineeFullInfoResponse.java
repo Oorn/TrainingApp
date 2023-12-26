@@ -20,6 +20,8 @@ public class TraineeFullInfoResponse {
 
     private String address;
 
+    private boolean isActive;
+
     private List<TrainerShortInfoResponse> trainersList;
 
 }

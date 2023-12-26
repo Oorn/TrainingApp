@@ -38,7 +38,7 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
     public Optional<TrainingPartnership> getByTraineeTrainer(String traineeName, String trainerName) {
         Set<TrainingPartnership> partnershipsByTrainee = mapByTrainee.get(traineeName);
         return partnershipsByTrainee.stream()
-                .filter(t->t.getTrainer().getUser().getUserName().equals(traineeName))
+                .filter(t->t.getTrainer().getUser().getUserName().equals(trainerName))
                 .filter(t->!t.isRemoved())
                 .findAny();
     }

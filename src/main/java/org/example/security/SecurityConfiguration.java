@@ -38,7 +38,7 @@ public class SecurityConfiguration{
                 //ant matchers
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/ping/**").permitAll()
+                .antMatchers("/ping/**", "/**", "/credentials/**", "/training/**", "/trainee/**", "/trainer/**", "training-type/**").permitAll()
                 .anyRequest()
                 .authenticated();
 

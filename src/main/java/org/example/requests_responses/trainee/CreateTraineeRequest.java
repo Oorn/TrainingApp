@@ -17,4 +17,6 @@ public class CreateTraineeRequest {
     private Instant dateOfBirth;
 
     private String address;
+
+
 }

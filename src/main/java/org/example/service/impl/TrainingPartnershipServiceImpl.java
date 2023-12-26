@@ -1,8 +1,10 @@
 package org.example.service.impl;
 
 import lombok.Setter;
+import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
+import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
 import org.example.requests_responses.trainer.TrainerShortInfoResponse;
@@ -26,6 +28,9 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
     private TrainerRepository trainerRepository;
 
     @Setter(onMethod_={@Autowired})
+    private TraineeRepository traineeRepository;
+
+    @Setter(onMethod_={@Autowired})
     private TrainingPartnershipRepository trainingPartnershipRepository;
 
     @Setter(onMethod_={@Autowired})
@@ -34,6 +39,8 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
 
     @Override
     public AvailableTrainersResponse getNotAssignedTrainers(String traineeUsername) {
+        if (traineeRepository.get(traineeUsername).isEmpty())
+            return null; //todo not found exception?
         Set<Trainer> assignedTrainers = trainingPartnershipRepository.getByTraineeName(traineeUsername).stream()
                 .filter(t->!t.isRemoved())
                 .map(TrainingPartnership::getTrainer)

@@ -9,6 +9,6 @@ public interface TraineeService {
     CredentialsResponse create (CreateTraineeRequest request);
     TraineeFullInfoResponse get(String username);
     TraineeFullInfoResponse update(UpdateTraineeProfileRequest request);
-    void delete(String username);
+    boolean delete(String username);
 
 }

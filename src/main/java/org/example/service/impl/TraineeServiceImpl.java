@@ -82,10 +82,10 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public void delete(String username) {
+    public boolean delete(String username) {
         Trainee trainee = traineeRepository.get(username).orElse(null);
         if (trainee == null)
-            return; //todo throw not found exception if null
+            return false;
         trainee.setRemoved(true);
         trainee.getUser().setRemoved(true);
         trainee.getTrainingPartnerships().forEach(t->t.setRemoved(true));
@@ -94,5 +94,6 @@ public class TraineeServiceImpl implements TraineeService {
                 forEach(t->t.setRemoved(true));
 
         traineeRepository.save(trainee);
+        return true;
     }
 }

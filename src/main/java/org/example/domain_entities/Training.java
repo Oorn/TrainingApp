@@ -7,8 +7,10 @@ import java.util.Date;
 
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Training {
 
+    @EqualsAndHashCode.Include
     private long id;
 
     private TrainingPartnership trainingPartnership;

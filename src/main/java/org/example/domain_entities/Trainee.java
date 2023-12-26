@@ -9,8 +9,10 @@ import java.util.Set;
 
 @Builder
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Trainee {
 
+    @EqualsAndHashCode.Include
     private  long id;
 
     private Instant dateOfBirth;

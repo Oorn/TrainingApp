@@ -11,7 +11,5 @@ public class UpdateTrainerProfileRequest {
 
     private String lastName;
 
-    private String specialisation;
-
     private boolean isActive;
 }

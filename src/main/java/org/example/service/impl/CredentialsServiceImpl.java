@@ -3,6 +3,7 @@ package org.example.service.impl;
 import lombok.Setter;
 import org.example.domain_entities.User;
 import org.example.repository.UserRepository;
+import org.example.requests_responses.user.LoginRequest;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsService;
 import org.example.service.CredentialsServiceUtils;
@@ -29,6 +30,11 @@ public class CredentialsServiceImpl implements CredentialsService {
         if (optionalUser.isEmpty())
             return false; //no user with such username found
         return credentialsServiceUtils.validateUserPassword(optionalUser.get(),password);
+    }
+
+    @Override
+    public boolean validateUsernamePassword(LoginRequest request) {
+        return validateUsernamePassword(request.getUsername(), request.getPassword());
     }
 
     @Override

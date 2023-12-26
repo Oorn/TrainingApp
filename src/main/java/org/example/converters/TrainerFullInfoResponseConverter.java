@@ -6,6 +6,7 @@ import org.example.domain_entities.Trainer;
 import org.example.requests_responses.trainee.TraineeShortInfoResponse;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TrainerFullInfoResponseConverter implements Converter<Trainer, TrainerFullInfoResponse> {
 
-    @Setter(onMethod_={@Autowired})
+    @Setter(onMethod_={@Autowired, @Lazy})
     private ConversionService converter;
 
     @Override
@@ -26,6 +27,7 @@ public class TrainerFullInfoResponseConverter implements Converter<Trainer, Trai
                 .firstName(trainer.getUser().getFirstName())
                 .lastName(trainer.getUser().getLastName())
                 .username(trainer.getUser().getUserName())
+                .isActive(trainer.getUser().isActive())
                 .traineesList(trainer.getTrainingPartnerships().stream()
                         .filter(t -> !t.isRemoved())
                         .filter(t -> t.getTrainee().getUser().isActive())

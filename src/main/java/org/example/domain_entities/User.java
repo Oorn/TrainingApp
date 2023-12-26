@@ -6,8 +6,10 @@ import java.util.Set;
 
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
+    @EqualsAndHashCode.Include
     private long id;
 
     private String firstName;

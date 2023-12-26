@@ -14,20 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/ping")
 public class PingController {
-
-    @Setter(onMethod_={@Autowired})
-    private TraineeService traineeService;
     @GetMapping
     @Operation(summary = "gets latest messages from channel")
     public ResponseEntity<Object> ping(){
         return new ResponseEntity<>("pong", HttpStatus.OK);
     }
 
-    @PostMapping("/test-create")
-    @Operation(summary = "test create Trainee")
-    public ResponseEntity<Object> testCreateTrainee(@RequestBody CreateTraineeRequest request){
-        CredentialsResponse result = traineeService.create(request);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 }
 

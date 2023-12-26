@@ -4,10 +4,7 @@ import lombok.Setter;
 import org.example.domain_entities.Training;
 import org.example.domain_entities.TrainingPartnership;
 import org.example.domain_entities.TrainingType;
-import org.example.repository.TrainerRepository;
-import org.example.repository.TrainingPartnershipRepository;
-import org.example.repository.TrainingRepository;
-import org.example.repository.TrainingTypeRepository;
+import org.example.repository.*;
 import org.example.repository.dto.TrainingSearchFilter;
 import org.example.requests_responses.training.*;
 import org.example.service.TrainingService;
@@ -26,7 +23,7 @@ public class TrainingServiceImpl implements TrainingService {
     private TrainerRepository trainerRepository;
 
     @Setter(onMethod_={@Autowired})
-    private TrainerRepository traineeRepository;
+    private TraineeRepository traineeRepository;
 
     @Setter(onMethod_={@Autowired})
     private TrainingRepository trainingRepository;
@@ -52,10 +49,6 @@ public class TrainingServiceImpl implements TrainingService {
             throw new NoSuchElementException();
         if (partnership.getTrainee().getUser().isRemoved())
             throw new NoSuchElementException(); //todo more granular exceptions
-
-        TrainingType trainingType = trainingTypeRepository.get(request.getType()).orElseThrow();
-        if (trainingType != partnership.getTrainer().getSpecialization())
-            throw new IllegalStateException(); //todo better exception, partnership mismatches with trainer
 
         Training training = Training.builder()
                 .trainingName(request.getName())
