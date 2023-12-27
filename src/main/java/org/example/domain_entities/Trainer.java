@@ -18,6 +18,7 @@ public class Trainer {
 
     private boolean isRemoved;
 
+    @ToString.Exclude
     private Set<TrainingPartnership> trainingPartnerships;
 
 }

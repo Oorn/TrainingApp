@@ -16,6 +16,7 @@ public class User {
 
     private String lastName;
 
+    @EqualsAndHashCode.Include
     private String userName;
 
     private String password;
@@ -26,7 +27,9 @@ public class User {
 
     private boolean isRemoved;
 
+    @ToString.Exclude
     private Trainer trainerProfile;
 
+    @ToString.Exclude
     private Trainee traineeProfile;
 }

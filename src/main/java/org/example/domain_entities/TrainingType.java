@@ -16,5 +16,6 @@ public class TrainingType {
 
     private boolean isRemoved;
 
+    @ToString.Exclude
     private Set<Trainer> trainers;
 }

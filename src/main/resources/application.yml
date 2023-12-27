@@ -5,3 +5,6 @@ spring:
     password: postgres
 server:
   port: 8081
+logging:
+  level:
+    org.example.logging.*: INFO
