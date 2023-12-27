@@ -21,9 +21,9 @@ public class RepositoryLogger {
         message += joinpoint.getSignature().getName();
         message += " of class ";
         message += joinpoint.getSignature().getDeclaringTypeName();
-        message += " with arguments ";
+        message += " with arguments:  ";
         message += Arrays.stream(joinpoint.getArgs()).sequential()
-                .map(o->o.getClass().getName() + ": " + o +", ").reduce("", (a,b)->a+b);
+                .map(o->o.getClass().getName() + " " + o +", ").reduce("", (a,b)->a+b);
         message = message.substring(0, message.length() - 2);
         log.info(message);
     }
