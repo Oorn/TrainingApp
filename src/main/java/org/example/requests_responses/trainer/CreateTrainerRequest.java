@@ -4,6 +4,7 @@ import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
 public class CreateTrainerRequest {
     private String firstName;
 

@@ -136,6 +136,8 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
         entity.setId(idProvider.provideIdentity(TrainingPartnership.class));
         mapByTrainer.computeIfAbsent(entity.getTrainer().getUser().getUserName(), k -> new HashSet<>()).add(entity);
         mapByTrainee.computeIfAbsent(entity.getTrainee().getUser().getUserName(), k -> new HashSet<>()).add(entity);
+        entity.getTrainee().getTrainingPartnerships().add(entity);
+        entity.getTrainer().getTrainingPartnerships().add(entity);
         return entity;
     }
 
