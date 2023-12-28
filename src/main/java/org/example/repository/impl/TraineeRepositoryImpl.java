@@ -35,9 +35,6 @@ public class TraineeRepositoryImpl implements TraineeRepository {
         Trainee oldTrainee = TraineeMap.get(username);
         if (oldTrainee == null)
             return Optional.empty();
-        // removed handling moved to service
-        // if (oldTrainee.isRemoved())
-        //    return Optional.empty();
         return Optional.of(oldTrainee);
     }
 

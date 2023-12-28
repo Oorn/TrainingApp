@@ -26,9 +26,6 @@ public class UserRepositoryImpl implements UserRepository {
         User oldUser = userMap.get(username);
         if (oldUser == null)
             return Optional.empty();
-        //removed handling moved to service
-        //if (oldUser.isRemoved())
-        //    return Optional.empty();
         return Optional.of(oldUser);
 
     }

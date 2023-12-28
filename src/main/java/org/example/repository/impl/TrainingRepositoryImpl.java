@@ -42,7 +42,6 @@ public class TrainingRepositoryImpl implements TrainingRepository {
             stream = mapByTrainee.values().stream().flatMap(Collection::stream);
         //initial big grained stream setup complete, now filtering.
         //there might be some redundant checks to keep the code clean
-        //stream = stream.filter(t->!t.isRemoved()); //removed handling moved to service
         if (searchFilter.getTraineeName() != null)
             stream = stream.filter(t->t.getTrainingPartnership().getTrainee().getUser().getUserName().equals(searchFilter.getTraineeName()));
         if (searchFilter.getTrainerName() != null)

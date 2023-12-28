@@ -40,7 +40,6 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
         Set<TrainingPartnership> partnershipsByTrainee = mapByTrainee.get(traineeName);
         return partnershipsByTrainee.stream()
                 .filter(t->t.getTrainer().getUser().getUserName().equals(trainerName))
-                //.filter(t->!t.isRemoved()) //removed handling moved to service
                 .findAny();
     }
 
@@ -87,7 +86,6 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
                         .trainings(new HashSet<>())
                         .build())
                 .forEach(this::save);
-                //.collect(Collectors.toList()).forEach(this::save); //collect is present so that all partnerships can throw exceptions before saving starts
         return getByTraineeName(username);
 
     }
@@ -118,16 +116,11 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
                         .trainings(new HashSet<>())
                         .build())
                 .forEach(this::save);
-                //.collect(Collectors.toList()).forEach(this::save);//collect is present so that all partnerships can throw exceptions before saving starts
         return getByTrainerName(username);
     }
 
     @Override
     public TrainingPartnership save(TrainingPartnership entity) {
-        /*if (trainerRepository.get(entity.getTrainer().getUser().getUserName()).isEmpty())
-            return null;
-        if (traineeRepository.get(entity.getTrainee().getUser().getUserName()).isEmpty())
-            return null;*/
         entity.getTrainer().getTrainingPartnerships().add(entity);//back link
         entity.getTrainee().getTrainingPartnerships().add(entity);//back link
         entity.setId(idProvider.provideIdentity(TrainingPartnership.class));

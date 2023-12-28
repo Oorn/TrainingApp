@@ -40,9 +40,6 @@ public class TrainerRepositoryImpl implements TrainerRepository {
         Trainer oldTrainer = TrainerMap.get(username);
         if (oldTrainer == null)
             return Optional.empty();
-        //removed handling moved to service
-        //if (oldTrainer.isRemoved())
-        //    return Optional.empty();
         return Optional.of(oldTrainer);
     }
 
