@@ -7,4 +7,4 @@ server:
   port: 8081
 logging:
   level:
-    org.example.logging.*: INFO
+    org.example.logging.*: DEBUG

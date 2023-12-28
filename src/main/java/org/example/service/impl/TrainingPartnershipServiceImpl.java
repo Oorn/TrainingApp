@@ -1,7 +1,6 @@
 package org.example.service.impl;
 
 import lombok.Setter;
-import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
 import org.example.repository.TraineeRepository;
@@ -57,7 +56,7 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
 
     @Override
     public UpdateTrainingPartnershipListResponse updateTraineeTrainerList(UpdateTrainingPartnershipListRequest request) {
-        List<Trainer> trainers = request.getTrainerUsername().stream()
+        List<Trainer> trainers = request.getTrainerUsernames().stream()
                 .map(t->trainerRepository.get(t).orElseThrow())
                 .peek(t->{
                     if (t.isRemoved()) throw new NoSuchElementException();

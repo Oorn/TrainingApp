@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController
+//@RestController
 @RequestMapping("/ping")
 public class PingController {
     @GetMapping

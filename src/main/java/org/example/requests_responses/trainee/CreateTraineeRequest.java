@@ -1,6 +1,7 @@
 package org.example.requests_responses.trainee;
 
 import lombok.*;
+import org.example.requests_responses.trainer.CreateTrainerRequest;
 
 import java.time.Instant;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class CreateTraineeRequest {
 
     private String firstName;
@@ -19,4 +21,10 @@ public class CreateTraineeRequest {
     private String address;
 
 
+    public CreateTraineeRequest(String firstName, String lastName, String dateOfBirth, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = Instant.parse(dateOfBirth);
+        this.address = address;
+    }
 }

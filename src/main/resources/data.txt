@@ -1,0 +1,13 @@
+/   Supported commands:
+/
+/   register-trainee String(firstname) String(lastname) Instant(dateOfBirth) String(address)
+/   register-trainer String(firstname) String(lastname) String(trainingType)
+/   update-trainee String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)
+/   update-trainer String(username) String(new firstname) String(new lastname) boolean(new isActive)
+/   update-partnerships String(trainee) String(trainers)...
+/   add-training String(trainee) String(trainer) String(name) Instant(date) Duration(duration)
+/   add-training-type String(name)
+
+add-training-type type1
+add-training-type type2
+add-training-type type3

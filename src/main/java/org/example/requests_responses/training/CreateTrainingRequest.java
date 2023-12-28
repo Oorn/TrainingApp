@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class CreateTrainingRequest {
     private String traineeUsername;
 
@@ -18,4 +19,12 @@ public class CreateTrainingRequest {
     private Instant date;
 
     private Duration duration;
+
+    public CreateTrainingRequest(String traineeUsername, String trainerUsername, String name, String date, String duration) {
+        this.traineeUsername = traineeUsername;
+        this.trainerUsername = trainerUsername;
+        this.name = name;
+        this.date = Instant.parse(date);
+        this.duration = Duration.parse(duration);
+    }
 }

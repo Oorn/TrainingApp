@@ -11,4 +11,9 @@ public class CreateTrainerRequest {
 
     private String specialisation;
 
+    public CreateTrainerRequest(String firstName, String lastName, String specialisation) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specialisation = specialisation;
+    }
 }
