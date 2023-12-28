@@ -99,9 +99,9 @@ public class TextFileLoader {
                     trainerController.updateTrainer(new UpdateTrainerProfileRequest(tokens[1], tokens[2], tokens[3], tokens[4]));
                     break;
                 case "update-partnerships":
-                    if (argCount == 2)
+                    if (argCount == 1)
                         throw new Exception("incorrect parameter count. Command format: update-partnerships String(trainee) String(trainers)...");
-                    traineeController.updatePartnerships(new UpdateTrainingPartnershipListRequest(tokens[0], Arrays.copyOfRange(tokens, 1, argCount)));
+                    traineeController.updatePartnerships(new UpdateTrainingPartnershipListRequest(tokens[1], Arrays.copyOfRange(tokens, 2, argCount)));
                     break;
                 case "add-training":
                     if (argCount != 6)

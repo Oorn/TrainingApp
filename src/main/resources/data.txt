@@ -11,3 +11,22 @@
 add-training-type type1
 add-training-type type2
 add-training-type type3
+register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-trainer Trainer Trainer type1
+register-trainer Trainer Trainer type2
+register-trainer Trainer Trainer type3
+register-trainer Trainer Trainer type1
+register-trainer Trainer Trainer type2
+register-trainer Trainer Trainer type3
+update-trainee Trainee.Trainee1 name name 2020-11-30T18:35:24.00Z new-address true
+update-trainee Trainee.Trainee0 name name 2020-11-30T18:35:24.00Z new-address false
+update-trainer Trainer.Trainer4 name name false
+update-partnerships Trainee.Trainee Trainer.Trainer Trainer.Trainer0 Trainer.Trainer1 Trainer.Trainer2 Trainer.Trainer3
+update-partnerships Trainee.Trainee1 Trainer.Trainer
+update-partnerships Trainee.Trainee1
+update-partnerships Trainee.Trainee1 Trainer.Trainer
+add-training Trainee.Trainee Trainer.Trainer name 2020-11-30T18:35:24.00Z PT1H30M
+add-training Trainee.Trainee Trainer.Trainer name 2020-11-29T18:35:24.00Z PT1H30M
+add-training Trainee.Trainee Trainer.Trainer name 2020-11-28T18:35:24.00Z PT1H30M
