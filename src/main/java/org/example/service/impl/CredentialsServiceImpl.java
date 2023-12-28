@@ -2,6 +2,10 @@ package org.example.service.impl;
 
 import lombok.Setter;
 import org.example.domain_entities.User;
+import org.example.exceptions.IllegalStateException;
+import org.example.exceptions.NoPermissionException;
+import org.example.exceptions.NoSuchEntityException;
+import org.example.exceptions.RemovedEntityException;
 import org.example.repository.UserRepository;
 import org.example.requests_responses.user.LoginRequest;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
@@ -28,7 +32,9 @@ public class CredentialsServiceImpl implements CredentialsService {
     public boolean validateUsernamePassword(String username, String password) {
         Optional<User> optionalUser = userRepository.get(username);
         if (optionalUser.isEmpty())
-            return false; //no user with such username found
+            throw new NoPermissionException("credentials don't match"); //no user with such username found
+        if (optionalUser.get().isRemoved())
+            throw new RemovedEntityException("user has been removed");
         return credentialsServiceUtils.validateUserPassword(optionalUser.get(),password);
     }
 
@@ -40,12 +46,14 @@ public class CredentialsServiceImpl implements CredentialsService {
     @Override
     public boolean updateCredentials(UpdateCredentialsRequest request) {
         if (!validateUsernamePassword(request.getUsername(), request.getOldPassword()))
-            return false; //old credentials don't match
+            throw new NoPermissionException("old credentials don't match");
         if (!credentialsServiceUtils.validatePasswordRequirements(request.getNewPassword()))
-            return false; //password does not meet requirements //todo add exceptions to indicate exact problem
+            throw new IllegalStateException("error - new password rejected for unknown reason");
         //checks passed, may update password
 
-        User user = userRepository.get(request.getUsername()).orElseThrow();
+        User user = userRepository.get(request.getUsername()).orElseThrow(()->new NoPermissionException("old credentials don't match"));
+        if (user.isRemoved())
+            throw new RemovedEntityException("user has been removed");
         credentialsServiceUtils.setUserPassword(user, request.getNewPassword());
         userRepository.save(user);
         return true;
@@ -83,7 +91,7 @@ public class CredentialsServiceImpl implements CredentialsService {
             if (candidatePostfix < presentPostfix)
                 break; //candidate postfix has been passed without being equal, it is valid
             if (candidatePostfix > presentPostfix)
-                continue; //candidate is larger than the present, move to next present. //todo log error, this state should be impossible without duplicate usernames
+                throw new IllegalStateException("error - duplicate usernames"); //candidate is larger than the present, move to next present. log error, this state should be impossible without duplicate usernames
             candidatePostfix++; //candidate is equal to present, move to next candidate
         }
 

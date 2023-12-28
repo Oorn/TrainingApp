@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.exceptions.IllegalStateException;
 
 @RestController
 @RequestMapping("/credentials")
@@ -34,14 +35,18 @@ public class CredentialsController {
     @Operation(summary = "register Trainee")
     public ResponseEntity<Object> createTrainee(@RequestBody CreateTraineeRequest request){
         CredentialsResponse result = traineeService.create(request);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        if (result != null)
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PostMapping("/register-trainer")
     @Operation(summary = "register Trainer")
     public ResponseEntity<Object> createTrainer(@RequestBody CreateTrainerRequest request){
         CredentialsResponse result = trainerService.create(request);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        if (result != null)
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PostMapping("/login")
@@ -49,7 +54,7 @@ public class CredentialsController {
     public ResponseEntity<Object> login(@RequestBody LoginRequest request){
         if (credentialsService.validateUsernamePassword(request))
             return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        throw new IllegalStateException("error - credentials rejected for unspecified reason");
     }
 
     @PostMapping("/update-credentials")
@@ -57,6 +62,6 @@ public class CredentialsController {
     public ResponseEntity<Object> login(@RequestBody UpdateCredentialsRequest request){
         if (credentialsService.updateCredentials(request))
             return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN); //todo should forbidden on non-matching credentials, and bad request on not following password rules
+        throw new IllegalStateException("error - credentials rejected for unspecified reason");
     }
 }

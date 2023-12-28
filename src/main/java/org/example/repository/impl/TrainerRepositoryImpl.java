@@ -5,6 +5,7 @@ import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
 import org.example.domain_entities.TrainingType;
+import org.example.exceptions.IllegalStateException;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
 import org.example.repository.TrainingTypeRepository;
@@ -39,8 +40,9 @@ public class TrainerRepositoryImpl implements TrainerRepository {
         Trainer oldTrainer = TrainerMap.get(username);
         if (oldTrainer == null)
             return Optional.empty();
-        if (oldTrainer.isRemoved())
-            return Optional.empty();
+        //removed handling moved to service
+        //if (oldTrainer.isRemoved())
+        //    return Optional.empty();
         return Optional.of(oldTrainer);
     }
 
@@ -58,10 +60,11 @@ public class TrainerRepositoryImpl implements TrainerRepository {
             //new user case
             if (!entity.getTrainingPartnerships().isEmpty())
                 //illegal state, creating user with non-empty partnerships
-                throw new IllegalStateException(); //todo better exception
+                throw new IllegalStateException("error - attempting to create trainer with non-empty partnerships");
             entity.setId(idProvider.provideIdentity(Trainer.class));
             entity.getSpecialization().getTrainers().add(entity);
             TrainerMap.put(entity.getUser().getUserName(), entity);
+            entity.getUser().setTrainerProfile(entity);//back link
             userRepository.save(entity.getUser());
             trainingPartnershipRepository.updateAndReturnListForTrainer(entity.getUser().getUserName(), new ArrayList<>());
             return entity;
@@ -71,17 +74,7 @@ public class TrainerRepositoryImpl implements TrainerRepository {
             return entity;
         }
         // illegal state, entity and oldTrainer have same username but different objects
-        throw new IllegalStateException(); //todo better exception
+        throw new IllegalStateException("error - users with duplicate usernames");
     }
 
-    /*@Override
-    public void delete(String username) {
-        Trainer oldTrainer = TrainerMap.get(username);
-        if (oldTrainer == null)
-            return;
-        oldTrainer.setRemoved(true);
-        userRepository.delete(username);
-        trainingPartnershipRepository.deleteAllForTrainer(username);
-
-    }*/
 }

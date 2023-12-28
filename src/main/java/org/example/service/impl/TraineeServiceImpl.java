@@ -2,6 +2,8 @@ package org.example.service.impl;
 
 import lombok.Setter;
 import org.example.domain_entities.Trainee;
+import org.example.exceptions.NoSuchEntityException;
+import org.example.exceptions.RemovedEntityException;
 import org.example.repository.TraineeRepository;
 import org.example.repository.UserRepository;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
@@ -56,9 +58,9 @@ public class TraineeServiceImpl implements TraineeService {
     public TraineeFullInfoResponse get(String username) {
         Trainee trainee = traineeRepository.get(username).orElse(null);
         if (trainee == null)
-            return null; //todo throw not found exception if null
+            throw new NoSuchEntityException("trainee not found");
         if (trainee.isRemoved())
-            return null; //todo throw removed exception
+            throw new RemovedEntityException("trainee has been removed");
         return converter.convert(trainee, TraineeFullInfoResponse.class);
     }
 
@@ -66,15 +68,17 @@ public class TraineeServiceImpl implements TraineeService {
     public TraineeFullInfoResponse update(UpdateTraineeProfileRequest request) {
         Trainee trainee = traineeRepository.get(request.getUsername()).orElse(null);
         if (trainee == null)
-            return null; //todo throw not found exception if null
+            throw new NoSuchEntityException("trainee not found");
         if (trainee.isRemoved())
-            return null; //todo throw removed exception
+            throw new RemovedEntityException("trainee has been removed");
 
         trainee.setAddress(request.getAddress());
         trainee.setDateOfBirth(request.getDateOfBirth());
         trainee.getUser().setFirstName(request.getFirstName());
         trainee.getUser().setLastName(request.getLastName());
         trainee.getUser().setActive(request.isActive());
+        if (request.isActive())
+            trainee.getTrainingPartnerships().forEach(tp->tp.setRemoved(true)); //automatically remove partnerships of inactive users (but not trainings)
 
         traineeRepository.save(trainee);
 
@@ -85,7 +89,7 @@ public class TraineeServiceImpl implements TraineeService {
     public boolean delete(String username) {
         Trainee trainee = traineeRepository.get(username).orElse(null);
         if (trainee == null)
-            return false;
+            throw new NoSuchEntityException("trainee not found");
         trainee.setRemoved(true);
         trainee.getUser().setRemoved(true);
         trainee.getTrainingPartnerships().forEach(t->t.setRemoved(true));

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.User;
+import org.example.exceptions.NoSuchEntityException;
 import org.example.repository.TrainingTypeRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 
@@ -28,7 +29,8 @@ public class CreateTrainerRequestConverter implements Converter<CreateTrainerReq
                 .isActive(true)
                 .build();
         Trainer newTrainer = Trainer.builder()
-                .specialization(trainingTypeRepository.get(request.getSpecialisation()).orElseThrow())
+                .specialization(trainingTypeRepository.get(request.getSpecialisation())
+                        .orElseThrow(()->new NoSuchEntityException("training type \"" + request.getSpecialisation() + "\" not found")))
                 .trainingPartnerships(new HashSet<>())
                 .user(newUser)
                 .isRemoved(false)

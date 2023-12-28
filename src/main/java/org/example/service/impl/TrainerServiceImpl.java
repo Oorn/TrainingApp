@@ -3,6 +3,8 @@ package org.example.service.impl;
 import lombok.Setter;
 import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
+import org.example.exceptions.NoSuchEntityException;
+import org.example.exceptions.RemovedEntityException;
 import org.example.repository.TrainerRepository;
 import org.example.repository.UserRepository;
 import org.example.requests_responses.trainee.TraineeFullInfoResponse;
@@ -53,9 +55,9 @@ public class TrainerServiceImpl implements TrainerService {
     public TrainerFullInfoResponse get(String username) {
         Trainer trainer = trainerRepository.get(username).orElse(null);
         if (trainer == null)
-            return null; //todo throw not found exception if null
+            throw new NoSuchEntityException("trainer not found");
         if (trainer.isRemoved())
-            return null; //todo throw removed exception
+            throw new RemovedEntityException("trainer has been removed");
         return converter.convert(trainer, TrainerFullInfoResponse.class);
     }
 
@@ -63,13 +65,15 @@ public class TrainerServiceImpl implements TrainerService {
     public TrainerFullInfoResponse update(UpdateTrainerProfileRequest request) {
         Trainer trainer = trainerRepository.get(request.getUsername()).orElse(null);
         if (trainer == null)
-            return null; //todo throw not found exception if null
+            throw new NoSuchEntityException("trainer not found");
         if (trainer.isRemoved())
-            return null; //todo throw removed exception
+            throw new RemovedEntityException("trainer has been removed");
 
         trainer.getUser().setFirstName(request.getFirstName());
         trainer.getUser().setLastName(request.getLastName());
         trainer.getUser().setActive(request.isActive());
+        if (request.isActive())
+            trainer.getTrainingPartnerships().forEach(tp->tp.setRemoved(true)); //automatically remove partnerships of inactive users (but not trainings)
 
         trainerRepository.save(trainer);
 

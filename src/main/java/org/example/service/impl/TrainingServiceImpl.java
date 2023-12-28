@@ -1,9 +1,10 @@
 package org.example.service.impl;
 
 import lombok.Setter;
-import org.example.domain_entities.Training;
-import org.example.domain_entities.TrainingPartnership;
-import org.example.domain_entities.TrainingType;
+import org.example.domain_entities.*;
+import org.example.exceptions.BadRequestException;
+import org.example.exceptions.NoSuchEntityException;
+import org.example.exceptions.RemovedEntityException;
 import org.example.repository.*;
 import org.example.repository.dto.TrainingSearchFilter;
 import org.example.requests_responses.training.*;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,23 +34,21 @@ public class TrainingServiceImpl implements TrainingService {
     private TrainingPartnershipRepository trainingPartnershipRepository;
 
     @Setter(onMethod_={@Autowired})
-    private TrainingTypeRepository trainingTypeRepository;
-
-    @Setter(onMethod_={@Autowired})
     private ConversionService converter;
 
 
     @Override
     public boolean create(CreateTrainingRequest request) {
-        TrainingPartnership partnership = trainingPartnershipRepository.getByTraineeTrainer(request.getTraineeUsername(), request.getTrainerUsername()).orElseThrow();
-        if (partnership.isRemoved())
-            throw new NoSuchElementException();
-        if (!partnership.getTrainer().getUser().isActive())
-            throw new NoSuchElementException();
-        if (!partnership.getTrainee().getUser().isActive())
-            throw new NoSuchElementException();
+        TrainingPartnership partnership = trainingPartnershipRepository.getByTraineeTrainer(request.getTraineeUsername(), request.getTrainerUsername()).orElseThrow(()->new NoSuchEntityException("training partnership not found"));
+
         if (partnership.getTrainee().getUser().isRemoved())
-            throw new NoSuchElementException(); //todo more granular exceptions
+            throw new RemovedEntityException("trainee has been removed");
+        if (!partnership.getTrainer().getUser().isActive())
+            throw new RemovedEntityException("trainer is inactive");
+        if (!partnership.getTrainee().getUser().isActive())
+            throw new RemovedEntityException("trainee is inactive");
+        if (partnership.isRemoved())
+            throw new RemovedEntityException("training partnership has been removed (and can be restored)");
 
         Training training = Training.builder()
                 .trainingName(request.getName())
@@ -66,12 +66,17 @@ public class TrainingServiceImpl implements TrainingService {
     public MultipleTrainingInfoResponse getByTrainee(GetTraineeTrainingsRequest request) {
         TrainingSearchFilter filter = Objects.requireNonNull(converter.convert(request, TrainingSearchFilter.class));
         if (filter.getTraineeName() == null)
-            throw new IllegalStateException(); //todo better exception
-        if (traineeRepository.get(filter.getTraineeName()).isEmpty())
-            throw new NoSuchElementException(); //todo better exception
+            throw new BadRequestException("requires trainee username");
+        Optional<Trainee> traineeOptional = traineeRepository.get(filter.getTraineeName());
+        if (traineeOptional.isEmpty())
+            throw new NoSuchElementException("trainee not found");
+        if (traineeOptional.get().isRemoved())
+            throw new RemovedEntityException("trainee has been removed");
+
 
         return MultipleTrainingInfoResponse.builder()
                 .trainings(trainingRepository.getTrainingsByFilter(filter).stream()
+                        .filter(t->!t.getTrainingPartnership().getTrainer().isRemoved()) //not needed because trainers can't be removed
                         .map(t->converter.convert(t, TrainingInfoResponse.class))
                         .collect(Collectors.toList()))
                 .build();
@@ -81,12 +86,16 @@ public class TrainingServiceImpl implements TrainingService {
     public MultipleTrainingInfoResponse getByTrainer(GetTrainerTrainingsRequest request) {
         TrainingSearchFilter filter = Objects.requireNonNull(converter.convert(request, TrainingSearchFilter.class));
         if (filter.getTrainerName() == null)
-            throw new IllegalStateException(); //todo better exception
-        if (trainerRepository.get(filter.getTrainerName()).isEmpty())
-            throw new NoSuchElementException(); //todo better exception
+            throw new BadRequestException("requires trainer username");
+        Optional<Trainer> trainerOptional = trainerRepository.get(filter.getTrainerName());
+        if (trainerOptional.isEmpty())
+            throw new NoSuchElementException("trainee not found");
+        if (trainerOptional.get().isRemoved())
+            throw new RemovedEntityException("trainee has been removed");
 
         return MultipleTrainingInfoResponse.builder()
                 .trainings(trainingRepository.getTrainingsByFilter(filter).stream()
+                        .filter(t->!t.getTrainingPartnership().getTrainee().isRemoved()) //don't show trainings from removed trainees
                         .map(t->converter.convert(t, TrainingInfoResponse.class))
                         .collect(Collectors.toList()))
                 .build();

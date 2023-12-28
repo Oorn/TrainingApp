@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.domain_entities.User;
+import org.example.exceptions.BadRequestException;
 import org.example.service.CredentialsServiceUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,15 +57,15 @@ public class CredentialsServiceUtilsImpl implements CredentialsServiceUtils {
 
     @Override
     public boolean validatePasswordRequirements(String password) {
-        //todo add exceptions to indicate exact errors
         if (password.length() < MIN_PASSWORD_LENGTH)
-            return false;
+            throw new BadRequestException("password too short");
         if (password.length() > MAX_PASSWORD_LENGTH)
-            return false;
+            throw new BadRequestException("password too long");
 
-        return password.chars().allMatch(c -> {
-            if (c < POSSIBLE_CHARACTER_START) return false;
-            return c < POSSIBLE_CHARACTER_END;
-        }); //illegal characters;
+        password.chars().forEach(c -> {
+            if ((c < POSSIBLE_CHARACTER_START) || (c > POSSIBLE_CHARACTER_END))
+                throw new BadRequestException("password has illegal characters");
+        });
+        return true;
     }
 }

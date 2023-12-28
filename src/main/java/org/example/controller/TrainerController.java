@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.example.exceptions.IllegalStateException;
 
 @RestController
 @RequestMapping("/trainer")
@@ -31,7 +32,7 @@ public class TrainerController {
         TrainerFullInfoResponse result = trainerService.get(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PutMapping
@@ -40,7 +41,7 @@ public class TrainerController {
         TrainerFullInfoResponse result = trainerService.update(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PostMapping("/get-trainings")
@@ -49,6 +50,6 @@ public class TrainerController {
         MultipleTrainingInfoResponse result = trainingService.getByTrainer(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 }

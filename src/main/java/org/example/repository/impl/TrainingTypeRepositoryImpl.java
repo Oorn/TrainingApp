@@ -24,8 +24,9 @@ public class TrainingTypeRepositoryImpl implements TrainingTypeRepository {
         TrainingType result = trainingTypeMap.get(name);
         if (result == null)
             return Optional.empty();
-        if (result.isRemoved())
-            return Optional.empty();
+        //removed handling moved to service
+        //if (result.isRemoved())
+        //    return Optional.empty();
         return Optional.of(result);
     }
 
@@ -49,8 +50,4 @@ public class TrainingTypeRepositoryImpl implements TrainingTypeRepository {
         return newTrainingType;
     }
 
-    /*@Override
-    public void delete(String name) {
-        get(name).ifPresent(t->t.setRemoved(true));
-    }*/
 }

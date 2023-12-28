@@ -3,6 +3,8 @@ package org.example.service.impl;
 import lombok.Setter;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
+import org.example.exceptions.NoSuchEntityException;
+import org.example.exceptions.RemovedEntityException;
 import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
@@ -16,7 +18,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
     @Override
     public AvailableTrainersResponse getNotAssignedTrainers(String traineeUsername) {
         if (traineeRepository.get(traineeUsername).isEmpty())
-            return null; //todo not found exception?
+            throw new NoSuchEntityException("trainee not found");
         Set<Trainer> assignedTrainers = trainingPartnershipRepository.getByTraineeName(traineeUsername).stream()
                 .filter(t->!t.isRemoved())
                 .map(TrainingPartnership::getTrainer)
@@ -57,11 +58,14 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
     @Override
     public UpdateTrainingPartnershipListResponse updateTraineeTrainerList(UpdateTrainingPartnershipListRequest request) {
         List<Trainer> trainers = request.getTrainerUsernames().stream()
-                .map(t->trainerRepository.get(t).orElseThrow())
+                .map(t->trainerRepository.get(t).orElseThrow(()->new NoSuchEntityException("trainer not found")))
                 .peek(t->{
-                    if (t.isRemoved()) throw new NoSuchElementException();
+                    if (t.isRemoved()) throw new RemovedEntityException("trainer has been removed"); //is not necessary, trainers cannot be removed
                 })
-                .filter(t->t.getUser().isActive()) //todo better handling of inactive trainers in request than ignoring?
+                .peek(t->{
+                    if (!t.getUser().isActive()) throw new RemovedEntityException("trainer is inactive");
+                })
+                .filter(t->t.getUser().isActive()) //active trainers are silently ignored without raising error
                 .collect(Collectors.toList());
         return UpdateTrainingPartnershipListResponse.builder()
                 .trainersList(trainingPartnershipRepository.updateAndReturnListForTrainee(request.getUsername(), trainers)

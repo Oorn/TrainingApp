@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.exceptions.IllegalStateException;
 
 @RestController
 @RequestMapping("/training")
@@ -25,6 +26,6 @@ public class TrainingController {
     public ResponseEntity<Object> createTraining(@RequestBody CreateTrainingRequest request){
         if (trainingService.create(request))
             return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - training creation rejected for unspecified reason");
     }
 }

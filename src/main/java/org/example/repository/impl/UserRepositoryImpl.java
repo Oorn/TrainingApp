@@ -3,6 +3,7 @@ package org.example.repository.impl;
 import lombok.Setter;
 import org.example.domain_entities.Trainee;
 import org.example.domain_entities.User;
+import org.example.exceptions.IllegalStateException;
 import org.example.repository.UserRepository;
 import org.example.service.IdentityProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,9 @@ public class UserRepositoryImpl implements UserRepository {
         User oldUser = userMap.get(username);
         if (oldUser == null)
             return Optional.empty();
-        if (oldUser.isRemoved())
-            return Optional.empty();
+        //removed handling moved to service
+        //if (oldUser.isRemoved())
+        //    return Optional.empty();
         return Optional.of(oldUser);
 
     }
@@ -58,14 +60,8 @@ public class UserRepositoryImpl implements UserRepository {
             return entity;
         }
         // illegal state, entity and oldUser have same username but different objects
-        throw new IllegalStateException(); //todo better exception
+        throw new IllegalStateException("error - users with duplicate usernames");
 
     }
 
-    /*@Override
-    public void delete(String username) {
-        User oldUser = userMap.get(username);
-        if (oldUser != null)
-            oldUser.setRemoved(true);
-    }*/
 }

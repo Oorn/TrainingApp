@@ -5,6 +5,7 @@ import org.apache.commons.collections.map.MultiKeyMap;
 import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
+import org.example.exceptions.NoSuchEntityException;
 import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
@@ -39,7 +40,7 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
         Set<TrainingPartnership> partnershipsByTrainee = mapByTrainee.get(traineeName);
         return partnershipsByTrainee.stream()
                 .filter(t->t.getTrainer().getUser().getUserName().equals(trainerName))
-                .filter(t->!t.isRemoved())
+                //.filter(t->!t.isRemoved()) //removed handling moved to service
                 .findAny();
     }
 
@@ -48,9 +49,7 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
         Set<TrainingPartnership> mapValue = mapByTrainee.get(username);
         if (mapValue == null)
             return new ArrayList<>();
-        return mapValue.stream()
-                .filter(tp -> !tp.isRemoved())
-                .collect(Collectors.toList());
+        return new ArrayList<>(mapValue);
     }
 
     @Override
@@ -58,14 +57,12 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
         Set<TrainingPartnership> mapValue = mapByTrainer.get(username);
         if (mapValue == null)
             return new ArrayList<>();
-        return mapValue.stream()
-                .filter(tp -> !tp.isRemoved())
-                .collect(Collectors.toList());
+        return new ArrayList<>(mapValue);
     }
 
     @Override
     public List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<Trainer> trainers) {
-        Trainee trainee = traineeRepository.get(username).orElseThrow();
+        Trainee trainee = traineeRepository.get(username).orElseThrow(()->new NoSuchEntityException("trainee not found"));
         //should happen only on new trainee creation
         Set<TrainingPartnership> oldMapValue = mapByTrainee.computeIfAbsent(username, k -> new HashSet<>());
 
@@ -89,15 +86,15 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
                         .isRemoved(false)
                         .trainings(new HashSet<>())
                         .build())
-                .collect(Collectors.toList()).forEach(this::save); //collect is present so that all partnerships can throw exceptions before saving starts
-        //todo - remove collection trickery as mapping can no longer throw exceptions
+                .forEach(this::save);
+                //.collect(Collectors.toList()).forEach(this::save); //collect is present so that all partnerships can throw exceptions before saving starts
         return getByTraineeName(username);
 
     }
 
     @Override
     public List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<Trainee> trainees) {
-        Trainer trainer = trainerRepository.get(username).orElseThrow();
+        Trainer trainer = trainerRepository.get(username).orElseThrow(()->new NoSuchEntityException("trainer not found"));
         //should happen only on new trainee creation
         Set<TrainingPartnership> oldMapValue = mapByTrainer.computeIfAbsent(username, k -> new HashSet<>());
 
@@ -119,34 +116,23 @@ public class TrainingPartnershipRepositoryImpl implements TrainingPartnershipRep
                         .trainer(trainer)
                         .isRemoved(false)
                         .trainings(new HashSet<>())
-                        .build()).
-                collect(Collectors.toList()).forEach(this::save);//collect is present so that all partnerships can throw exceptions before saving starts
-        //todo - remove collection trickery as mapping can no longer throw exceptions
+                        .build())
+                .forEach(this::save);
+                //.collect(Collectors.toList()).forEach(this::save);//collect is present so that all partnerships can throw exceptions before saving starts
         return getByTrainerName(username);
     }
 
     @Override
     public TrainingPartnership save(TrainingPartnership entity) {
-        if (trainerRepository.get(entity.getTrainer().getUser().getUserName()).isEmpty())
+        /*if (trainerRepository.get(entity.getTrainer().getUser().getUserName()).isEmpty())
             return null;
         if (traineeRepository.get(entity.getTrainee().getUser().getUserName()).isEmpty())
-            return null;
-        entity.getTrainer().getTrainingPartnerships().add(entity);
-        entity.getTrainee().getTrainingPartnerships().add(entity);
+            return null;*/
+        entity.getTrainer().getTrainingPartnerships().add(entity);//back link
+        entity.getTrainee().getTrainingPartnerships().add(entity);//back link
         entity.setId(idProvider.provideIdentity(TrainingPartnership.class));
         mapByTrainer.computeIfAbsent(entity.getTrainer().getUser().getUserName(), k -> new HashSet<>()).add(entity);
         mapByTrainee.computeIfAbsent(entity.getTrainee().getUser().getUserName(), k -> new HashSet<>()).add(entity);
-        entity.getTrainee().getTrainingPartnerships().add(entity);
-        entity.getTrainer().getTrainingPartnerships().add(entity);
         return entity;
     }
-
-    /*@Override
-    public void deleteAllForTrainee(String username) {
-        updateAndReturnListForTrainee(username, new ArrayList<>());
-    }
-    @Override
-    public void deleteAllForTrainer(String username) {
-        updateAndReturnListForTrainer(username, new ArrayList<>());
-    }*/
 }

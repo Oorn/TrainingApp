@@ -25,7 +25,7 @@ public class TrainingRepositoryImpl implements TrainingRepository {
     @Override
     public Training save(Training training) { //does not check for trainingPartnership validity
         training.setId(idProvider.provideIdentity(Training.class));
-        training.getTrainingPartnership().getTrainings().add(training);
+        training.getTrainingPartnership().getTrainings().add(training);//back link
         mapByTrainer.computeIfAbsent(training.getTrainingPartnership().getTrainer().getUser().getUserName(), k -> new HashSet<>()).add(training);
         mapByTrainee.computeIfAbsent(training.getTrainingPartnership().getTrainee().getUser().getUserName(), k -> new HashSet<>()).add(training);
         return training;
@@ -42,7 +42,7 @@ public class TrainingRepositoryImpl implements TrainingRepository {
             stream = mapByTrainee.values().stream().flatMap(Collection::stream);
         //initial big grained stream setup complete, now filtering.
         //there might be some redundant checks to keep the code clean
-        stream = stream.filter(t->!t.isRemoved());
+        //stream = stream.filter(t->!t.isRemoved()); //removed handling moved to service
         if (searchFilter.getTraineeName() != null)
             stream = stream.filter(t->t.getTrainingPartnership().getTrainee().getUser().getUserName().equals(searchFilter.getTraineeName()));
         if (searchFilter.getTrainerName() != null)
@@ -57,8 +57,4 @@ public class TrainingRepositoryImpl implements TrainingRepository {
         return stream.collect(Collectors.toList());
     }
 
-    /*@Override
-    public void delete(Training training) {
-        training.setRemoved(true);
-    }*/
 }

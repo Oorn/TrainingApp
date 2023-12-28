@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.Setter;
+import org.example.exceptions.NoSuchEntityException;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
 import org.example.requests_responses.trainee.TraineeFullInfoResponse;
 import org.example.requests_responses.trainee.UpdateTraineeProfileRequest;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.example.exceptions.IllegalStateException;
 
 @RestController
 @RequestMapping("/trainee")
@@ -38,7 +40,7 @@ public class TraineeController {
         TraineeFullInfoResponse result = traineeService.get(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PutMapping
@@ -47,7 +49,7 @@ public class TraineeController {
         TraineeFullInfoResponse result = traineeService.update(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @DeleteMapping
@@ -55,7 +57,7 @@ public class TraineeController {
     public ResponseEntity<Object> deleteTrainee(@RequestParam String username){
         if (traineeService.delete(username))
             return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - delete rejected for unspecified reason");
     }
 
     @GetMapping("/free-trainers")
@@ -64,7 +66,7 @@ public class TraineeController {
         AvailableTrainersResponse result = partnershipService.getNotAssignedTrainers(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PutMapping("/update-partnerships")
@@ -73,7 +75,7 @@ public class TraineeController {
         UpdateTrainingPartnershipListResponse result = partnershipService.updateTraineeTrainerList(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 
     @PostMapping("/get-trainings")
@@ -82,6 +84,6 @@ public class TraineeController {
         MultipleTrainingInfoResponse result = trainingService.getByTrainee(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new IllegalStateException("error - service returned null");
     }
 }
