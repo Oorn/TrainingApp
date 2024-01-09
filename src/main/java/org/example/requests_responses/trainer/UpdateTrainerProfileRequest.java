@@ -1,5 +1,6 @@
 package org.example.requests_responses.trainer;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Data
@@ -7,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTrainerProfileRequest {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String username;
 
     private String firstName;

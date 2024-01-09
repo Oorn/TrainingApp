@@ -91,22 +91,22 @@ public class TextFileLoader {
                 case "update-trainee":
                     if (argCount != 7)
                         throw new Exception("incorrect parameter count. Command format: update-trainee String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)");
-                    traineeController.updateTrainee(new UpdateTraineeProfileRequest(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]));
+                    traineeController.updateTrainee(new UpdateTraineeProfileRequest(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]), tokens[1]);
                     break;
                 case "update-trainer":
                     if (argCount != 5)
                         throw new Exception("incorrect parameter count. Command format: update-trainer String(username) String(new firstname) String(new lastname) boolean(new isActive)");
-                    trainerController.updateTrainer(new UpdateTrainerProfileRequest(tokens[1], tokens[2], tokens[3], tokens[4]));
+                    trainerController.updateTrainer(new UpdateTrainerProfileRequest(tokens[1], tokens[2], tokens[3], tokens[4]), tokens[1]);
                     break;
                 case "update-partnerships":
                     if (argCount == 1)
                         throw new Exception("incorrect parameter count. Command format: update-partnerships String(trainee) String(trainers)...");
-                    traineeController.updatePartnerships(new UpdateTrainingPartnershipListRequest(tokens[1], Arrays.copyOfRange(tokens, 2, argCount)));
+                    traineeController.updatePartnerships(new UpdateTrainingPartnershipListRequest(tokens[1], Arrays.copyOfRange(tokens, 2, argCount)), tokens[1]);
                     break;
                 case "add-training":
                     if (argCount != 6)
                         throw new Exception("incorrect parameter count. Command format: add-training String(trainee) String(trainer) String(name) Instant(date) Duration(duration)");
-                    trainingController.createTraining(new CreateTrainingRequest(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]));
+                    trainingController.createTraineeTraining(new CreateTrainingRequest(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]), tokens[1], tokens[2]);
                     break;
                 case "add-training-type":
                     if (argCount != 2)

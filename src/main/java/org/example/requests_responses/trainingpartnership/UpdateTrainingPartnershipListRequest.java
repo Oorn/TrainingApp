@@ -1,5 +1,7 @@
 package org.example.requests_responses.trainingpartnership;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTrainingPartnershipListRequest {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String username;
 
     private List<String> trainerUsernames;

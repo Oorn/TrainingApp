@@ -62,6 +62,7 @@ public class CredentialsServiceImpl implements CredentialsService {
     @Override
     public String generateUsername(String firstName, String lastName) {
         String defaultUsername = firstName + "." + lastName;
+        defaultUsername = defaultUsername.replaceAll("[^A-Za-z0-9_.\\-~]", ""); //remove everything that might mess with web path
         String defaultUsernameRegex = Pattern.quote(defaultUsername); //to avoid sneaky injections
         List<User> matchingUsers = userRepository.getAllByPrefix(defaultUsername);
         if (matchingUsers.isEmpty())

@@ -1,6 +1,8 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.Setter;
 import org.example.requests_responses.training.CreateTrainingRequest;
 import org.example.service.TrainingService;
@@ -13,7 +15,7 @@ import org.example.exceptions.IllegalStateException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/training-type")
+@RequestMapping("/training-types")
 public class TrainingTypeController {
     @Setter(onMethod_={@Autowired})
     private TrainingTypeService trainingTypeService;
@@ -28,6 +30,7 @@ public class TrainingTypeController {
 
     @GetMapping
     @Operation(summary = "get all training types")
+    @Tags({@Tag(name = "trainee"), @Tag(name = "trainer")})
     public ResponseEntity<Object> getAllTrainingTypes(){
         List<String> result = trainingTypeService.get();
         if (result != null)

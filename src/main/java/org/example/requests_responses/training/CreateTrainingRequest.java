@@ -1,5 +1,6 @@
 package org.example.requests_responses.training;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.Duration;
@@ -11,14 +12,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTrainingRequest {
+    @Schema(hidden = true)
     private String traineeUsername;
 
+    @Schema(hidden = true)
     private String trainerUsername;
 
     private String name;
 
     private Instant date;
 
+    @Schema(defaultValue = "PT1H30M")
     private Duration duration;
 
     public CreateTrainingRequest(String traineeUsername, String trainerUsername, String name, String date, String duration) {

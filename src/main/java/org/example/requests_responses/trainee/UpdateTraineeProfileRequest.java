@@ -1,5 +1,7 @@
 package org.example.requests_responses.trainee;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.Instant;
@@ -11,6 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class UpdateTraineeProfileRequest {
 
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String username;
 
     private String firstName;
