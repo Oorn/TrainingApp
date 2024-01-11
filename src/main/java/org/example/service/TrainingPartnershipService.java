@@ -6,5 +6,5 @@ import org.example.requests_responses.trainingpartnership.UpdateTrainingPartners
 
 public interface TrainingPartnershipService {
     AvailableTrainersResponse getNotAssignedTrainers (String traineeUsername);
-    UpdateTrainingPartnershipListResponse updateTraineeTrainerList(UpdateTrainingPartnershipListRequest request);
+    UpdateTrainingPartnershipListResponse updateTraineeTrainerList(String authUsername, UpdateTrainingPartnershipListRequest request);
 }

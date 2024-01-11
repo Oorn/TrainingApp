@@ -38,8 +38,8 @@ public class TrainingServiceImpl implements TrainingService {
 
 
     @Override
-    public boolean create(CreateTrainingRequest request) {
-        TrainingPartnership partnership = trainingPartnershipRepository.getByTraineeTrainer(request.getTraineeUsername(), request.getTrainerUsername()).orElseThrow(()->new NoSuchEntityException("training partnership not found"));
+    public boolean create(String authUsername, CreateTrainingForTraineeRequest request) {
+        TrainingPartnership partnership = trainingPartnershipRepository.getByTraineeTrainer(authUsername, request.getTrainerUsername()).orElseThrow(()->new NoSuchEntityException("training partnership not found"));
 
         if (partnership.getTrainee().getUser().isRemoved())
             throw new RemovedEntityException("trainee has been removed");
@@ -61,10 +61,22 @@ public class TrainingServiceImpl implements TrainingService {
         trainingRepository.save(training);
         return true;
     }
+    @Override
+    public boolean create(String authUsername, CreateTrainingForTrainerRequest request) {
+        CreateTrainingForTraineeRequest req = CreateTrainingForTraineeRequest.builder()
+                .date(request.getDate())
+                .duration(request.getDuration())
+                .name(request.getName())
+                .trainerUsername(authUsername)
+                .build();
+        return create(request.getTraineeUsername(), req);
+    }
+
 
     @Override
-    public MultipleTrainingInfoResponse getByTrainee(GetTraineeTrainingsRequest request) {
+    public MultipleTrainingInfoResponse getByTrainee(String authUsername, GetTraineeTrainingsRequest request) {
         TrainingSearchFilter filter = Objects.requireNonNull(converter.convert(request, TrainingSearchFilter.class));
+        filter.setTraineeName(authUsername);
         if (filter.getTraineeName() == null)
             throw new BadRequestException("requires trainee username");
         Optional<Trainee> traineeOptional = traineeRepository.get(filter.getTraineeName());
@@ -83,8 +95,9 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public MultipleTrainingInfoResponse getByTrainer(GetTrainerTrainingsRequest request) {
+    public MultipleTrainingInfoResponse getByTrainer(String authUsername, GetTrainerTrainingsRequest request) {
         TrainingSearchFilter filter = Objects.requireNonNull(converter.convert(request, TrainingSearchFilter.class));
+        filter.setTrainerName(authUsername);
         if (filter.getTrainerName() == null)
             throw new BadRequestException("requires trainer username");
         Optional<Trainer> trainerOptional = trainerRepository.get(filter.getTrainerName());

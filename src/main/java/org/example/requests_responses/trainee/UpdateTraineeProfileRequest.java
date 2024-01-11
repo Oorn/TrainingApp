@@ -14,8 +14,8 @@ import java.util.Date;
 public class UpdateTraineeProfileRequest {
 
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String username;
+    //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    //private String username;
 
     private String firstName;
 
@@ -27,8 +27,7 @@ public class UpdateTraineeProfileRequest {
 
     private boolean isActive;
 
-    public UpdateTraineeProfileRequest(String username, String firstName, String lastName, String dateOfBirth, String address, String isActive) {
-        this.username = username;
+    public UpdateTraineeProfileRequest(String firstName, String lastName, String dateOfBirth, String address, String isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = Instant.parse(dateOfBirth);

@@ -2,13 +2,11 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.Setter;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.user.CredentialsResponse;
-import org.example.requests_responses.user.LoginRequest;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsService;
 import org.example.service.TraineeService;
@@ -53,10 +51,9 @@ public class CredentialsController {
     @PostMapping("/trainee/{username}/login")
     @Operation(summary = "login")
     @Tag(name = "trainee")
-    public ResponseEntity<Object> loginTrainee(@RequestBody LoginRequest request,
+    public ResponseEntity<Object> loginTrainee(@RequestBody String password,
                                                @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        if (!credentialsService.validateUsernamePassword(request))
+        if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
         if (traineeService.get(username) == null)
             throw new NoSuchEntityException("user is a trainer, not a trainee");
@@ -67,10 +64,9 @@ public class CredentialsController {
     @PostMapping("/trainer/{username}/login")
     @Operation(summary = "login")
     @Tag(name = "trainer")
-    public ResponseEntity<Object> loginTrainer(@RequestBody LoginRequest request,
+    public ResponseEntity<Object> loginTrainer(@RequestBody String password,
                                                @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        if (!credentialsService.validateUsernamePassword(request))
+        if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
         if (trainerService.get(username) == null)
             throw new NoSuchEntityException("user is a trainee, not a trainer");
@@ -83,8 +79,7 @@ public class CredentialsController {
     @Tag(name = "trainee")
     public ResponseEntity<Object> updateTraineePassword(@RequestBody UpdateCredentialsRequest request,
                                         @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        if (credentialsService.updateCredentials(request))
+        if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
     }
@@ -94,8 +89,7 @@ public class CredentialsController {
     @Tag(name = "trainer")
     public ResponseEntity<Object> updateTrainerPassword(@RequestBody UpdateCredentialsRequest request,
                                         @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        if (credentialsService.updateCredentials(request))
+        if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
     }

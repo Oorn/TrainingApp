@@ -50,8 +50,7 @@ public class TraineeController {
     @Operation(summary = "update trainee")
     public ResponseEntity<Object> updateTrainee(@RequestBody UpdateTraineeProfileRequest request,
                                                 @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        TraineeFullInfoResponse result = traineeService.update(request);
+        TraineeFullInfoResponse result = traineeService.update(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");
@@ -78,8 +77,7 @@ public class TraineeController {
     @Operation(summary = "update trainees training partnerships list")
     public ResponseEntity<Object> updatePartnerships(@ModelAttribute @RequestBody UpdateTrainingPartnershipListRequest request,
                                                      @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        UpdateTrainingPartnershipListResponse result = partnershipService.updateTraineeTrainerList(request);
+        UpdateTrainingPartnershipListResponse result = partnershipService.updateTraineeTrainerList(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");
@@ -89,8 +87,7 @@ public class TraineeController {
     @Operation(summary = "associated trainings")
     public ResponseEntity<Object> getTrainings(@ParameterObject GetTraineeTrainingsRequest request,
                                                @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        MultipleTrainingInfoResponse result = trainingService.getByTrainee(request);
+        MultipleTrainingInfoResponse result = trainingService.getByTrainee(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");

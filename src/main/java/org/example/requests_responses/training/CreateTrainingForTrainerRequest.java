@@ -5,18 +5,14 @@ import lombok.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTrainingRequest {
-    @Schema(hidden = true)
-    private String traineeUsername;
+public class CreateTrainingForTrainerRequest {
 
-    @Schema(hidden = true)
-    private String trainerUsername;
+    private String traineeUsername;
 
     private String name;
 
@@ -25,9 +21,8 @@ public class CreateTrainingRequest {
     @Schema(defaultValue = "PT1H30M")
     private Duration duration;
 
-    public CreateTrainingRequest(String traineeUsername, String trainerUsername, String name, String date, String duration) {
+    public CreateTrainingForTrainerRequest(String traineeUsername, String name, String date, String duration) {
         this.traineeUsername = traineeUsername;
-        this.trainerUsername = trainerUsername;
         this.name = name;
         this.date = Instant.parse(date);
         this.duration = Duration.parse(duration);

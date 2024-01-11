@@ -42,8 +42,7 @@ public class TrainerController {
     @Operation(summary = "update trainer")
     public ResponseEntity<Object> updateTrainer(@RequestBody UpdateTrainerProfileRequest request,
                                                 @PathVariable(name = "username") String username) {
-        request.setUsername(username);
-        TrainerFullInfoResponse result = trainerService.update(request);
+        TrainerFullInfoResponse result = trainerService.update(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");
@@ -53,8 +52,7 @@ public class TrainerController {
     @Operation(summary = "associated trainings")
     public ResponseEntity<Object> getTrainings(@ParameterObject GetTrainerTrainingsRequest request,
                                                @PathVariable(name = "username") String username){
-        request.setUsername(username);
-        MultipleTrainingInfoResponse result = trainingService.getByTrainer(request);
+        MultipleTrainingInfoResponse result = trainingService.getByTrainer(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");

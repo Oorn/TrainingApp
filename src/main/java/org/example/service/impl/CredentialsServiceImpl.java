@@ -4,10 +4,8 @@ import lombok.Setter;
 import org.example.domain_entities.User;
 import org.example.exceptions.IllegalStateException;
 import org.example.exceptions.NoPermissionException;
-import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
 import org.example.repository.UserRepository;
-import org.example.requests_responses.user.LoginRequest;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsService;
 import org.example.service.CredentialsServiceUtils;
@@ -38,20 +36,16 @@ public class CredentialsServiceImpl implements CredentialsService {
         return credentialsServiceUtils.validateUserPassword(optionalUser.get(),password);
     }
 
-    @Override
-    public boolean validateUsernamePassword(LoginRequest request) {
-        return validateUsernamePassword(request.getUsername(), request.getPassword());
-    }
 
     @Override
-    public boolean updateCredentials(UpdateCredentialsRequest request) {
-        if (!validateUsernamePassword(request.getUsername(), request.getOldPassword()))
+    public boolean updateCredentials(String authUsername, UpdateCredentialsRequest request) {
+        if (!validateUsernamePassword(authUsername, request.getOldPassword()))
             throw new NoPermissionException("old credentials don't match");
         if (!credentialsServiceUtils.validatePasswordRequirements(request.getNewPassword()))
             throw new IllegalStateException("error - new password rejected for unknown reason");
         //checks passed, may update password
 
-        User user = userRepository.get(request.getUsername()).orElseThrow(()->new NoPermissionException("old credentials don't match"));
+        User user = userRepository.get(authUsername).orElseThrow(()->new NoPermissionException("old credentials don't match"));
         if (user.isRemoved())
             throw new RemovedEntityException("user has been removed");
         credentialsServiceUtils.setUserPassword(user, request.getNewPassword());

@@ -6,8 +6,8 @@ import lombok.*;
 @Data
 @Builder
 public class UpdateCredentialsRequest {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    String username;
+    //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    //String username;
 
     String oldPassword;
 

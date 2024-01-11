@@ -12,7 +12,6 @@ public class GetTraineeTrainingsRequestConverter implements Converter<GetTrainee
     @Override
     public TrainingSearchFilter convert(GetTraineeTrainingsRequest source) {
         return TrainingSearchFilter.builder()
-                .traineeName(source.getUsername())
                 .trainerName(source.getTrainerUsername())
                 .trainingType(source.getType())
                 .dateFrom(source.getDateFrom())

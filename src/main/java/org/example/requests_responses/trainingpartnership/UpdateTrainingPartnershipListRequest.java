@@ -13,13 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTrainingPartnershipListRequest {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String username;
+    //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    //private String username;
 
     private List<String> trainerUsernames;
 
-    public UpdateTrainingPartnershipListRequest(String username, String... trainerUsernames) {
-        this.username = username;
+    public UpdateTrainingPartnershipListRequest(String... trainerUsernames) {
         this.trainerUsernames = Arrays.asList(trainerUsernames);
     }
 }

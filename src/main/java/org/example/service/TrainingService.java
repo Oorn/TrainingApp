@@ -1,12 +1,11 @@
 package org.example.service;
 
-import org.example.requests_responses.training.CreateTrainingRequest;
-import org.example.requests_responses.training.GetTraineeTrainingsRequest;
-import org.example.requests_responses.training.GetTrainerTrainingsRequest;
-import org.example.requests_responses.training.MultipleTrainingInfoResponse;
+import org.example.requests_responses.training.*;
 
 public interface TrainingService {
-    boolean create(CreateTrainingRequest request);
-    MultipleTrainingInfoResponse getByTrainee(GetTraineeTrainingsRequest request);
-    MultipleTrainingInfoResponse getByTrainer(GetTrainerTrainingsRequest request);
+    boolean create(String authUsername, CreateTrainingForTraineeRequest request);
+
+    boolean create(String authUsername, CreateTrainingForTrainerRequest request);
+    MultipleTrainingInfoResponse getByTrainee(String authUsername, GetTraineeTrainingsRequest request);
+    MultipleTrainingInfoResponse getByTrainer(String authUsername, GetTrainerTrainingsRequest request);
 }

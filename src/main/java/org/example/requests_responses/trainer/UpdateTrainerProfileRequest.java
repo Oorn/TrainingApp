@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTrainerProfileRequest {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String username;
+    //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    //private String username;
 
     private String firstName;
 
@@ -18,8 +18,7 @@ public class UpdateTrainerProfileRequest {
     private boolean isActive;
 
 
-    public UpdateTrainerProfileRequest(String username, String firstName, String lastName, String isActive) {
-        this.username = username;
+    public UpdateTrainerProfileRequest(String firstName, String lastName, String isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isActive = Boolean.parseBoolean(isActive);

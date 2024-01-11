@@ -8,5 +8,5 @@ import org.example.requests_responses.user.CredentialsResponse;
 public interface TrainerService {
     CredentialsResponse create(CreateTrainerRequest request);
     TrainerFullInfoResponse get(String username);
-    TrainerFullInfoResponse update(UpdateTrainerProfileRequest request);
+    TrainerFullInfoResponse update(String authUsername, UpdateTrainerProfileRequest request);
 }

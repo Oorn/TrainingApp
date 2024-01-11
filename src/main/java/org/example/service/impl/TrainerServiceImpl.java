@@ -62,8 +62,8 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerFullInfoResponse update(UpdateTrainerProfileRequest request) {
-        Trainer trainer = trainerRepository.get(request.getUsername()).orElse(null);
+    public TrainerFullInfoResponse update(String authUsername, UpdateTrainerProfileRequest request) {
+        Trainer trainer = trainerRepository.get(authUsername).orElse(null);
         if (trainer == null)
             throw new NoSuchEntityException("trainer not found");
         if (trainer.isRemoved())

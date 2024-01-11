@@ -65,8 +65,8 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public TraineeFullInfoResponse update(UpdateTraineeProfileRequest request) {
-        Trainee trainee = traineeRepository.get(request.getUsername()).orElse(null);
+    public TraineeFullInfoResponse update(String authUsername, UpdateTraineeProfileRequest request) {
+        Trainee trainee = traineeRepository.get(authUsername).orElse(null);
         if (trainee == null)
             throw new NoSuchEntityException("trainee not found");
         if (trainee.isRemoved())
