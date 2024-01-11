@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Setter;
 import org.example.requests_responses.training.CreateTrainingForTraineeRequest;
+import org.example.requests_responses.training.CreateTrainingForTrainerRequest;
 import org.example.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class TrainingController {
     @PostMapping("/trainer/{username}/training")
     @Operation(summary = "add training")
     @Tag(name = "trainer")
-    public ResponseEntity<Object> createTrainerTraining(@RequestBody CreateTrainingForTraineeRequest request,
+    public ResponseEntity<Object> createTrainerTraining(@RequestBody CreateTrainingForTrainerRequest request,
                                                         @PathVariable(name = "username") String username){
         if (trainingService.create(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
