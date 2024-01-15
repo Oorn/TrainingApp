@@ -10,15 +10,15 @@ import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PingTest {
-    //@LocalServerPort
+    @LocalServerPort
     private int port;
 
-    //@Autowired
+    @Autowired
     private TestRestTemplate restTemplate;
 
-    //@Test
+    @Test
     public void testNoAuthToken() {
         String url = "http://localhost:" + port + "/ping";
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
