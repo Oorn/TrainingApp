@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetTraineeTrainingsRequest {
     //@Schema(accessMode = Schema.AccessMode.READ_ONLY,
     //        description = "IGNORED. Comment - redundant and superseded by matching path variable. Cannot be hidden due to https://github.com/swagger-api/swagger-ui/issues/7696")

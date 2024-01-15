@@ -3,7 +3,6 @@ package org.example.domain_entities;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.Set;
 
 
@@ -17,7 +16,7 @@ public class Trainee {
 
     private Instant dateOfBirth;
 
-    private String Address;
+    private String address;
 
     private User user;
 

@@ -24,7 +24,7 @@ public class CreateTraineeRequestConverter implements Converter<CreateTraineeReq
                 .isActive(true)
                 .build();
         Trainee newTrainee = Trainee.builder()
-                .Address(request.getAddress())
+                .address(request.getAddress())
                 .dateOfBirth(request.getDateOfBirth())
                 .trainingPartnerships(new HashSet<>())
                 .user(newUser)
