@@ -13,11 +13,11 @@ import java.security.SecureRandom;
 @Service
 public class CredentialsServiceUtilsImpl implements CredentialsServiceUtils {
 
-    private static final int MIN_PASSWORD_LENGTH = 5;
+    public static final int MIN_PASSWORD_LENGTH = 5;
 
-    private static final int MAX_PASSWORD_LENGTH = 40;
-    private static final int RANDOM_PASSWORD_LENGTH = 10;
-    private static final int RANDOM_SALT_LENGTH = 10;
+    public static final int MAX_PASSWORD_LENGTH = 40;
+    public static final int RANDOM_PASSWORD_LENGTH = 10;
+    public static final int RANDOM_SALT_LENGTH = 10;
     private static final int POSSIBLE_CHARACTER_START = 33; // ! symbol
     private static final int POSSIBLE_CHARACTER_END = 127; // ~ symbol
 
