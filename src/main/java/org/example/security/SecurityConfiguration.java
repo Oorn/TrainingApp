@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.servlet.http.HttpServletResponse;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration{

@@ -57,15 +57,17 @@ public class TrainingPartnershipServiceImpl implements TrainingPartnershipServic
 
     @Override
     public UpdateTrainingPartnershipListResponse updateTraineeTrainerList(String authUsername, UpdateTrainingPartnershipListRequest request) {
+        if (traineeRepository.get(authUsername).isEmpty())
+            throw new NoSuchEntityException("trainee not found");
+
         List<Trainer> trainers = request.getTrainerUsernames().stream()
                 .map(t->trainerRepository.get(t).orElseThrow(()->new NoSuchEntityException("trainer not found")))
                 .peek(t->{
-                    if (t.isRemoved()) throw new RemovedEntityException("trainer has been removed"); //is not necessary, trainers cannot be removed
+                    if (t.isRemoved()) throw new RemovedEntityException("trainer " + t.getUser().getUserName() + " has been removed"); //is not necessary, trainers cannot be removed
                 })
                 .peek(t->{
-                    if (!t.getUser().isActive()) throw new RemovedEntityException("trainer is inactive");
+                    if (!t.getUser().isActive()) throw new RemovedEntityException("trainer " + t.getUser().getUserName() + " is inactive");
                 })
-                .filter(t->t.getUser().isActive()) //inactive trainers are silently ignored without raising error
                 .collect(Collectors.toList());
         return UpdateTrainingPartnershipListResponse.builder()
                 .trainersList(trainingPartnershipRepository.updateAndReturnListForTrainee(authUsername, trainers)
