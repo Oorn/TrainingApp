@@ -33,7 +33,9 @@ public class CredentialsServiceImpl implements CredentialsService {
             throw new NoPermissionException("credentials don't match"); //no user with such username found
         if (optionalUser.get().isRemoved())
             throw new RemovedEntityException("user has been removed");
-        return credentialsServiceUtils.validateUserPassword(optionalUser.get(),password);
+        if (!credentialsServiceUtils.validateUserPassword(optionalUser.get(),password))
+            throw new NoPermissionException("credentials don't match"); //hash check returned negative
+        return true;
     }
 
 
