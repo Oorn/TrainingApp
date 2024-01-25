@@ -53,7 +53,7 @@ public class TextFileLoader {
     private TrainingTypeController trainingTypeController;
 
     boolean isLoadingRequired() {
-        return ((List<String>)trainingTypeController.getAllTrainingTypes().getBody()).isEmpty();
+        return ((List<String>) Objects.requireNonNull(trainingTypeController.getAllTrainingTypes().getBody())).isEmpty();
     }
 
     @PostConstruct
