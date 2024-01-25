@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
+import javax.transaction.Transactional;
+
 @RestController
 public class CredentialsController {
 
@@ -31,6 +33,7 @@ public class CredentialsController {
     @PostMapping("/trainee")
     @Operation(summary = "register new Trainee")
     @Tag(name = "trainee")
+    @Transactional
     public ResponseEntity<Object> createTrainee(@RequestBody CreateTraineeRequest request){
         CredentialsResponse result = traineeService.create(request);
         if (result != null)
@@ -41,6 +44,7 @@ public class CredentialsController {
     @PostMapping("/trainer")
     @Operation(summary = "register new Trainer")
     @Tag(name = "trainer")
+    @Transactional
     public ResponseEntity<Object> createTrainer(@RequestBody CreateTrainerRequest request){
         CredentialsResponse result = trainerService.create(request);
         if (result != null)
@@ -77,6 +81,7 @@ public class CredentialsController {
     @PostMapping("/trainee/{username}/password")
     @Operation(summary = "change password")
     @Tag(name = "trainee")
+    @Transactional
     public ResponseEntity<Object> updateTraineePassword(@RequestBody UpdateCredentialsRequest request,
                                         @PathVariable(name = "username") String username){
         if (credentialsService.updateCredentials(username, request))
@@ -87,6 +92,7 @@ public class CredentialsController {
     @PostMapping("/trainer/{username}/password")
     @Operation(summary = "change password")
     @Tag(name = "trainer")
+    @Transactional
     public ResponseEntity<Object> updateTrainerPassword(@RequestBody UpdateCredentialsRequest request,
                                         @PathVariable(name = "username") String username){
         if (credentialsService.updateCredentials(username, request))

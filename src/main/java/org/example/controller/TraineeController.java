@@ -24,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping("/trainee/{username}")
 @Tag(name = "trainee")
@@ -48,6 +50,7 @@ public class TraineeController {
 
     @PutMapping
     @Operation(summary = "update trainee")
+    @Transactional
     public ResponseEntity<Object> updateTrainee(@RequestBody UpdateTraineeProfileRequest request,
                                                 @PathVariable(name = "username") String username){
         TraineeFullInfoResponse result = traineeService.update(username, request);
@@ -58,6 +61,7 @@ public class TraineeController {
 
     @DeleteMapping
     @Operation(summary = "remove trainee")
+    @Transactional
     public ResponseEntity<Object> deleteTrainee(@PathVariable(name = "username") String username){
         if (traineeService.delete(username))
             return new ResponseEntity<>(HttpStatus.OK);
@@ -75,6 +79,7 @@ public class TraineeController {
 
     @PutMapping("/partnerships")
     @Operation(summary = "update trainees training partnerships list")
+    @Transactional
     public ResponseEntity<Object> updatePartnerships(@ModelAttribute @RequestBody UpdateTrainingPartnershipListRequest request,
                                                      @PathVariable(name = "username") String username){
         UpdateTrainingPartnershipListResponse result = partnershipService.updateTraineeTrainerList(username, request);

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,7 @@ public class TrainingTypeController {
 
     @PostMapping
     @Operation(summary = "add training type")
+    @Transactional
     public ResponseEntity<Object> createTrainingType(@RequestParam String request){
         if (trainingTypeService.create(request))
             return new ResponseEntity<>(HttpStatus.OK);

@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping("/trainer/{username}")
 @Tag(name = "trainer")
@@ -40,6 +42,7 @@ public class TrainerController {
 
     @PutMapping
     @Operation(summary = "update trainer")
+    @Transactional
     public ResponseEntity<Object> updateTrainer(@RequestBody UpdateTrainerProfileRequest request,
                                                 @PathVariable(name = "username") String username) {
         TrainerFullInfoResponse result = trainerService.update(username, request);

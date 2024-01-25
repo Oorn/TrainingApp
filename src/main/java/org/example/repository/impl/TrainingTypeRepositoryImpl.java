@@ -39,7 +39,6 @@ public class TrainingTypeRepositoryImpl implements TrainingTypeRepository {
             return oldTrainingType.get();
         TrainingType newTrainingType = TrainingType.builder()
                 .trainingType(name)
-                .isRemoved(false)
                 .trainers(new HashSet<>())
                 .id(idProvider.provideIdentity(TrainingType.class))
                 .build();

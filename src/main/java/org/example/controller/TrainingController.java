@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
+import javax.transaction.Transactional;
+
 @RestController
 public class TrainingController {
     @Setter(onMethod_={@Autowired})
@@ -20,6 +22,7 @@ public class TrainingController {
     @PostMapping("/trainee/{username}/training")
     @Operation(summary = "add training")
     @Tag(name = "trainee")
+    @Transactional
     public ResponseEntity<Object> createTraineeTraining(@RequestBody CreateTrainingForTraineeRequest request,
                                                         @PathVariable(name = "username") String username){
 
@@ -30,6 +33,7 @@ public class TrainingController {
     @PostMapping("/trainer/{username}/training")
     @Operation(summary = "add training")
     @Tag(name = "trainer")
+    @Transactional
     public ResponseEntity<Object> createTrainerTraining(@RequestBody CreateTrainingForTrainerRequest request,
                                                         @PathVariable(name = "username") String username){
         if (trainingService.create(username, request))

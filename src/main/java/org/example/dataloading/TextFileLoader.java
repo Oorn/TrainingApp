@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -52,7 +53,7 @@ public class TextFileLoader {
     private TrainingTypeController trainingTypeController;
 
     boolean isLoadingRequired() {
-        return true;
+        return ((List<String>)trainingTypeController.getAllTrainingTypes().getBody()).isEmpty();
     }
 
     @PostConstruct

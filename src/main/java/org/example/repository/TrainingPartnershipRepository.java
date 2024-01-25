@@ -14,9 +14,9 @@ public interface TrainingPartnershipRepository {
 
     List<TrainingPartnership> getByTrainerName(String username);
 
-    List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<Trainer> trainerUsernames);
+    List<TrainingPartnership> updateAndReturnListForTrainee(String username, List<Trainer> trainers);
 
-    List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<Trainee> traineeUsernames);
+    List<TrainingPartnership> updateAndReturnListForTrainer(String username, List<Trainee> trainees);
 
     TrainingPartnership save(TrainingPartnership entity);
 
