@@ -9,6 +9,7 @@ import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
 import org.example.requests_responses.user.CredentialsResponse;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
+import org.example.security.JWTUtils;
 import org.example.service.CredentialsService;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class CredentialsControllerTest {
@@ -36,6 +38,9 @@ class CredentialsControllerTest {
 
     @Mock
     private CredentialsService credentialsService;
+
+    @Mock
+    private JWTUtils jwtUtils;
 
     @InjectMocks
     CredentialsController credentialsController;
@@ -63,15 +68,20 @@ class CredentialsControllerTest {
 
     @Test
     void loginTrainee() {
-        String user = "user", password = "password";
+        String user = "user", password = "password", token = "token";
         Mockito.when(credentialsService.validateUsernamePassword(user,password))
                 .thenReturn(true);
         Mockito.when(traineeService.get("user"))
                 .thenReturn(new TraineeFullInfoResponse());
+        Mockito.when(jwtUtils.generateToken(Mockito.any()))
+                .thenReturn(token);
 
         ResponseEntity<Object> response = credentialsController.loginTrainee(password, user);
         Mockito.verify(credentialsService).validateUsernamePassword(user, password);
         assert response.getStatusCode().is2xxSuccessful();
+        assertNotNull(response.getHeaders());
+        assertNotNull(response.getHeaders().get("Auth-Token"));
+        assert response.getHeaders().get("Auth-Token").stream().anyMatch(s->s.equals(token));
 
     }
 
@@ -88,15 +98,20 @@ class CredentialsControllerTest {
 
     @Test
     void loginTrainer() {
-        String user = "user", password = "password";
+        String user = "user", password = "password", token = "token";
         Mockito.when(credentialsService.validateUsernamePassword(user,password))
                 .thenReturn(true);
         Mockito.when(trainerService.get("user"))
                 .thenReturn(new TrainerFullInfoResponse());
+        Mockito.when(jwtUtils.generateToken(Mockito.any()))
+                .thenReturn(token);
 
         ResponseEntity<Object> response = credentialsController.loginTrainer(password, user);
         Mockito.verify(credentialsService).validateUsernamePassword(user, password);
         assert response.getStatusCode().is2xxSuccessful();
+        assertNotNull(response.getHeaders());
+        assertNotNull(response.getHeaders().get("Auth-Token"));
+        assert response.getHeaders().get("Auth-Token").stream().anyMatch(s->s.equals(token));
     }
 
     @Test

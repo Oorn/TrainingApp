@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 
 import org.example.domain_entities.User;
+import org.example.exceptions.NoPermissionException;
 import org.example.repository.UserRepository;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsServiceUtils;
@@ -39,7 +40,7 @@ class CredentialsServiceImplTest {
         when(credentialsServiceUtils.validateUserPassword(user,passwordWrong)).thenReturn(false);
 
         assert credentialsService.validateUsernamePassword(username, passwordRight);
-        assert !credentialsService.validateUsernamePassword(username, passwordWrong);
+        assertThrows(NoPermissionException.class, () -> credentialsService.validateUsernamePassword(username, passwordWrong));
         verify(credentialsServiceUtils, times(2)).validateUserPassword(eq(user), anyString());
 
     }
