@@ -1,5 +1,7 @@
 package org.example.security;
 
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -7,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration{
+
+    @Setter(onMethod_={@Autowired})
+    private AuthFilterWrapper authFilterWrapper;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,11 +41,13 @@ public class SecurityConfiguration{
                 //ant matchers
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/ping/**", "/credentials/**", "/training/**", "/trainee/**", "/trainer/**", "training-type/**", "/**").permitAll()
+                .antMatchers("/ping/**", "/training-types", "/trainer", "/trainee", "/trainee/{username}/login", "/trainer/{username}/login" ).permitAll()
+                .antMatchers("/trainer/**", "/trainee/**").authenticated()
                 .anyRequest()
-                .authenticated();
+                .denyAll();
 
 
+        http.addFilterBefore(authFilterWrapper.getAuthFilter(), BasicAuthenticationFilter.class);
         return http.build();
 
     }

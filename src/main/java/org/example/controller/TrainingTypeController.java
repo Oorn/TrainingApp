@@ -20,7 +20,8 @@ public class TrainingTypeController {
     @Setter(onMethod_={@Autowired})
     private TrainingTypeService trainingTypeService;
 
-    @PostMapping
+    //disabled as per task specification
+    //@PostMapping
     @Operation(summary = "add training type")
     @Transactional
     public ResponseEntity<Object> createTrainingType(@RequestParam String request){

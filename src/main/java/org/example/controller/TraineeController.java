@@ -1,6 +1,10 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Setter;
 import org.example.exceptions.NoSuchEntityException;
@@ -13,6 +17,7 @@ import org.example.requests_responses.trainingpartnership.AvailableTrainersRespo
 import org.example.requests_responses.trainingpartnership.UpdateTrainingPartnershipListRequest;
 import org.example.requests_responses.trainingpartnership.UpdateTrainingPartnershipListResponse;
 import org.example.requests_responses.user.CredentialsResponse;
+import org.example.security.JWTPropertiesConfig;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingPartnershipService;
@@ -40,7 +45,12 @@ public class TraineeController {
     private TrainingService trainingService;
 
     @GetMapping
-    @Operation(summary = "trainee info")
+    @Operation(summary = "trainee info", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     public ResponseEntity<Object> getTrainee(@PathVariable(name = "username") String username){
         TraineeFullInfoResponse result = traineeService.get(username);
         if (result != null)
@@ -49,7 +59,12 @@ public class TraineeController {
     }
 
     @PutMapping
-    @Operation(summary = "update trainee")
+    @Operation(summary = "update trainee", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     @Transactional
     public ResponseEntity<Object> updateTrainee(@RequestBody UpdateTraineeProfileRequest request,
                                                 @PathVariable(name = "username") String username){
@@ -60,7 +75,12 @@ public class TraineeController {
     }
 
     @DeleteMapping
-    @Operation(summary = "remove trainee")
+    @Operation(summary = "remove trainee", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     @Transactional
     public ResponseEntity<Object> deleteTrainee(@PathVariable(name = "username") String username){
         if (traineeService.delete(username))
@@ -69,7 +89,12 @@ public class TraineeController {
     }
 
     @GetMapping("/free-trainers")
-    @Operation(summary = "available trainer info")
+    @Operation(summary = "available trainer info", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     public ResponseEntity<Object> getFreeTrainers(@PathVariable(name = "username") String username){
         AvailableTrainersResponse result = partnershipService.getNotAssignedTrainers(username);
         if (result != null)
@@ -78,7 +103,12 @@ public class TraineeController {
     }
 
     @PutMapping("/partnerships")
-    @Operation(summary = "update trainees training partnerships list")
+    @Operation(summary = "update trainees training partnerships list", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     @Transactional
     public ResponseEntity<Object> updatePartnerships(@ModelAttribute @RequestBody UpdateTrainingPartnershipListRequest request,
                                                      @PathVariable(name = "username") String username){
@@ -89,7 +119,12 @@ public class TraineeController {
     }
 
     @GetMapping("/trainings")
-    @Operation(summary = "associated trainings")
+    @Operation(summary = "associated trainings", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
     public ResponseEntity<Object> getTrainings(@ParameterObject GetTraineeTrainingsRequest request,
                                                @PathVariable(name = "username") String username){
         MultipleTrainingInfoResponse result = trainingService.getByTrainee(username, request);
