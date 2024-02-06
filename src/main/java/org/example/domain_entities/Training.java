@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Builder
@@ -23,7 +21,7 @@ public class Training {
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "training_partnership_fk", nullable = false)
-    private TrainingPartnership trainingPartnership;
+    private Partnership partnership;
 
     @Column(name = "training_name")
     private String trainingName;

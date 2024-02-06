@@ -1,40 +1,35 @@
 package org.example.controller;
 
-import lombok.Setter;
-import org.example.exceptions.IllegalStateException;
 import org.example.exceptions.NoPermissionException;
-import org.example.requests_responses.trainee.CreateTraineeRequest;
-import org.example.requests_responses.trainee.TraineeFullInfoResponse;
-import org.example.requests_responses.trainer.CreateTrainerRequest;
-import org.example.requests_responses.trainer.TrainerFullInfoResponse;
+import org.example.requests_responses.trainee.CreateStudentRequest;
+import org.example.requests_responses.trainee.StudentFullInfoResponse;
+import org.example.requests_responses.trainer.CreateMentorRequest;
+import org.example.requests_responses.trainer.MentorFullInfoResponse;
 import org.example.requests_responses.user.CredentialsResponse;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.security.JWTUtils;
 import org.example.service.CredentialsService;
-import org.example.service.TraineeService;
-import org.example.service.TrainerService;
+import org.example.service.StudentService;
+import org.example.service.MentorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class CredentialsControllerTest {
 
     @Mock
-    private TraineeService traineeService;
+    private StudentService studentService;
 
     @Mock
-    private TrainerService trainerService;
+    private MentorService mentorService;
 
     @Mock
     private CredentialsService credentialsService;
@@ -48,21 +43,21 @@ class CredentialsControllerTest {
 
     @Test
     void createTrainee() {
-        CreateTraineeRequest req = new CreateTraineeRequest();
-        Mockito.when(traineeService.create(req)).thenReturn(new CredentialsResponse());
+        CreateStudentRequest req = new CreateStudentRequest();
+        Mockito.when(studentService.create(req)).thenReturn(new CredentialsResponse());
 
-        ResponseEntity<Object> response = credentialsController.createTrainee(req);
-        Mockito.verify(traineeService).create(req);
+        ResponseEntity<Object> response = credentialsController.createStudent(req);
+        Mockito.verify(studentService).create(req);
         assert response.getStatusCode().is2xxSuccessful();
     }
 
     @Test
     void createTrainer() {
-        CreateTrainerRequest req = new CreateTrainerRequest();
-        Mockito.when(trainerService.create(req)).thenReturn(new CredentialsResponse());
+        CreateMentorRequest req = new CreateMentorRequest();
+        Mockito.when(mentorService.create(req)).thenReturn(new CredentialsResponse());
 
-        ResponseEntity<Object> response = credentialsController.createTrainer(req);
-        Mockito.verify(trainerService).create(req);
+        ResponseEntity<Object> response = credentialsController.createMentor(req);
+        Mockito.verify(mentorService).create(req);
         assert response.getStatusCode().is2xxSuccessful();
     }
 
@@ -71,8 +66,8 @@ class CredentialsControllerTest {
         String user = "user", password = "password", token = "token";
         Mockito.when(credentialsService.validateUsernamePassword(user,password))
                 .thenReturn(true);
-        Mockito.when(traineeService.get("user"))
-                .thenReturn(new TraineeFullInfoResponse());
+        Mockito.when(studentService.get("user"))
+                .thenReturn(new StudentFullInfoResponse());
         Mockito.when(jwtUtils.generateToken(Mockito.any()))
                 .thenReturn(token);
 
@@ -101,8 +96,8 @@ class CredentialsControllerTest {
         String user = "user", password = "password", token = "token";
         Mockito.when(credentialsService.validateUsernamePassword(user,password))
                 .thenReturn(true);
-        Mockito.when(trainerService.get("user"))
-                .thenReturn(new TrainerFullInfoResponse());
+        Mockito.when(mentorService.get("user"))
+                .thenReturn(new MentorFullInfoResponse());
         Mockito.when(jwtUtils.generateToken(Mockito.any()))
                 .thenReturn(token);
 
@@ -121,7 +116,7 @@ class CredentialsControllerTest {
         Mockito.when(credentialsService.updateCredentials(user, req))
                 .thenReturn(true);
 
-        ResponseEntity<Object> response = credentialsController.updateTraineePassword(req, user);
+        ResponseEntity<Object> response = credentialsController.updateStudentPassword(req, user);
         Mockito.verify(credentialsService).updateCredentials(user, req);
         assert response.getStatusCode().is2xxSuccessful();
     }
@@ -133,7 +128,7 @@ class CredentialsControllerTest {
         Mockito.when(credentialsService.updateCredentials(user, req))
                 .thenReturn(true);
 
-        ResponseEntity<Object> response = credentialsController.updateTrainerPassword(req, user);
+        ResponseEntity<Object> response = credentialsController.updateMentorPassword(req, user);
         Mockito.verify(credentialsService).updateCredentials(user, req);
         assert response.getStatusCode().is2xxSuccessful();
     }

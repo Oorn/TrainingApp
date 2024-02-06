@@ -1,28 +1,28 @@
 /   Supported commands:
 /
-/   register-trainee String(firstname) String(lastname) Instant(dateOfBirth) String(address)
-/   register-trainer String(firstname) String(lastname) String(trainingType)
-/   update-trainee String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)
-/   update-trainer String(username) String(new firstname) String(new lastname) boolean(new isActive)
-/   update-partnerships String(trainee) String(trainers)...
-/   add-training String(trainee) String(trainer) String(name) Instant(date) Duration(duration)
+/   register-student String(firstname) String(lastname) Instant(dateOfBirth) String(address)
+/   register-mentor String(firstname) String(lastname) String(specialisation)
+/   update-student String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)
+/   update-mentor String(username) String(new firstname) String(new lastname) boolean(new isActive)
+/   update-partnerships String(student) String(trainers)...
+/   add-training String(student) String(mentor) String(name) Instant(date) Duration(duration)
 /   add-training-type String(name)
 
 add-training-type type1
 add-training-type type2
 add-training-type type3
-register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
-register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
-register-trainee Trainee Trainee 2018-11-30T18:35:24.00Z address
-register-trainer Trainer Trainer type1
-register-trainer Trainer Trainer type2
-register-trainer Trainer Trainer type3
-register-trainer Trainer Trainer type1
-register-trainer Trainer Trainer type2
-register-trainer Trainer Trainer type3
-update-trainee Trainee.Trainee1 name name 2020-11-30T18:35:24.00Z new-address true
-update-trainee Trainee.Trainee0 name name 2020-11-30T18:35:24.00Z new-address false
-update-trainer Trainer.Trainer4 name name false
+register-student Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-student Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-student Trainee Trainee 2018-11-30T18:35:24.00Z address
+register-mentor Trainer Trainer type1
+register-mentor Trainer Trainer type2
+register-mentor Trainer Trainer type3
+register-mentor Trainer Trainer type1
+register-mentor Trainer Trainer type2
+register-mentor Trainer Trainer type3
+update-student Trainee.Trainee1 name name 2020-11-30T18:35:24.00Z new-address true
+update-student Trainee.Trainee0 name name 2020-11-30T18:35:24.00Z new-address false
+update-mentor Trainer.Trainer4 name name false
 update-partnerships Trainee.Trainee Trainer.Trainer Trainer.Trainer0 Trainer.Trainer1 Trainer.Trainer2 Trainer.Trainer3
 update-partnerships Trainee.Trainee1 Trainer.Trainer
 update-partnerships Trainee.Trainee1

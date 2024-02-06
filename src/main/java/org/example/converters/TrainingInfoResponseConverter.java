@@ -14,10 +14,10 @@ public class TrainingInfoResponseConverter implements Converter<Training, Traini
     @Override
     public TrainingInfoResponse convert(Training source) {
         return TrainingInfoResponse.builder()
-                .traineeUsername(source.getTrainingPartnership().getTrainee().getUser().getUserName())
-                .trainerUsername(source.getTrainingPartnership().getTrainer().getUser().getUserName())
+                .studentUsername(source.getPartnership().getStudent().getUser().getUserName())
+                .mentorUsername(source.getPartnership().getMentor().getUser().getUserName())
                 .name(source.getTrainingName())
-                .type(source.getTrainingPartnership().getTrainer().getSpecialization().getTrainingType())
+                .type(source.getPartnership().getMentor().getSpecialization().getSpecialisationName())
                 .date(source.getTrainingDateFrom())
                 .duration(Duration.between(source.getTrainingDateFrom().toInstant(), source.getTrainingDateTo().toInstant()))
                 .build();

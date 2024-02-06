@@ -4,17 +4,15 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainingInfoResponse {
-    private String traineeUsername;
+    private String studentUsername;
 
-    private String trainerUsername;
+    private String mentorUsername;
 
     private String name;
 

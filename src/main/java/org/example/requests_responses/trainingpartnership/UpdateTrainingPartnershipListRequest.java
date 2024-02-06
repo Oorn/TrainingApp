@@ -1,10 +1,7 @@
 package org.example.requests_responses.trainingpartnership;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,9 +13,9 @@ public class UpdateTrainingPartnershipListRequest {
     //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
     //private String username;
 
-    private List<String> trainerUsernames;
+    private List<String> mentorUsernames;
 
-    public UpdateTrainingPartnershipListRequest(String... trainerUsernames) {
-        this.trainerUsernames = Arrays.asList(trainerUsernames);
+    public UpdateTrainingPartnershipListRequest(String... mentorUsernames) {
+        this.mentorUsernames = Arrays.asList(mentorUsernames);
     }
 }

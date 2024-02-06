@@ -3,11 +3,11 @@ package org.example.security;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.domain_entities.Trainee;
-import org.example.domain_entities.Trainer;
+import org.example.domain_entities.Mentor;
+import org.example.domain_entities.Student;
 import org.example.domain_entities.User;
-import org.example.repository.TraineeHibernateRepository;
-import org.example.repository.TrainerHibernateRepository;
+import org.example.repository.StudentHibernateRepository;
+import org.example.repository.MentorHibernateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -40,18 +40,18 @@ public class AuthFilterWrapper {
     private  JWTUtils tokenUtils;
 
     @Setter(onMethod_={@Autowired})
-    private TraineeHibernateRepository traineeRepository;
+    private StudentHibernateRepository traineeRepository;
 
     @Setter(onMethod_={@Autowired})
-    private TrainerHibernateRepository trainerRepository;
+    private MentorHibernateRepository trainerRepository;
 
     @Getter
     private final AuthFilter authFilter = new AuthFilter(this);
 
 
     private static final String USERNAME = "username";
-    public static final String TRAINER_AUTH_PATH_PATTERN = "/trainer/{" + USERNAME + "}/**";
-    public static final String TRAINEE_AUTH_PATH_PATTERN = "/trainee/{" + USERNAME + "}/**";
+    public static final String TRAINER_AUTH_PATH_PATTERN = "/mentor/{" + USERNAME + "}/**";
+    public static final String TRAINEE_AUTH_PATH_PATTERN = "/student/{" + USERNAME + "}/**";
 
     private final AntPathRequestMatcher trainerMatcher = new AntPathRequestMatcher(TRAINER_AUTH_PATH_PATTERN);
     private final AntPathRequestMatcher traineeMatcher = new AntPathRequestMatcher(TRAINEE_AUTH_PATH_PATTERN);
@@ -91,7 +91,7 @@ public class AuthFilterWrapper {
                 filterChain.doFilter(servletRequest, httpServletResponse);
                 return;
             }
-            Optional<Trainee> authTrainee = traineeRepository.findTraineeByUsername(tokenUsername);
+            Optional<Student> authTrainee = traineeRepository.findStudentByUsername(tokenUsername);
             //no such user in database, can only happen if user was hard deleted and token has not yet expired
             if (authTrainee.isEmpty()) {
                 filterChain.doFilter(servletRequest, httpServletResponse);
@@ -113,7 +113,7 @@ public class AuthFilterWrapper {
                 filterChain.doFilter(servletRequest, httpServletResponse);
                 return;
             }
-            Optional<Trainer> authTrainer = trainerRepository.findTrainerByUsername(tokenUsername);
+            Optional<Mentor> authTrainer = trainerRepository.findMentorByUsername(tokenUsername);
             //no such user in database, can only happen if user was hard deleted and token has not yet expired
             if (authTrainer.isEmpty()) {
                 filterChain.doFilter(servletRequest, httpServletResponse);

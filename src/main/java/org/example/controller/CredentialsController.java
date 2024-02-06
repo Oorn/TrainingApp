@@ -8,15 +8,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Setter;
 import org.example.exceptions.NoSuchEntityException;
-import org.example.requests_responses.trainee.CreateTraineeRequest;
-import org.example.requests_responses.trainer.CreateTrainerRequest;
+import org.example.requests_responses.trainee.CreateStudentRequest;
+import org.example.requests_responses.trainer.CreateMentorRequest;
 import org.example.requests_responses.user.CredentialsResponse;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.security.JWTPropertiesConfig;
 import org.example.security.JWTUtils;
 import org.example.service.CredentialsService;
-import org.example.service.TraineeService;
-import org.example.service.TrainerService;
+import org.example.service.StudentService;
+import org.example.service.MentorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,33 +33,33 @@ import javax.transaction.Transactional;
 public class CredentialsController {
 
     @Setter(onMethod_={@Autowired})
-    private TraineeService traineeService;
+    private StudentService studentService;
 
     @Setter(onMethod_={@Autowired})
-    private TrainerService trainerService;
+    private MentorService mentorService;
 
     @Setter(onMethod_={@Autowired})
     private CredentialsService credentialsService;
 
     @Setter(onMethod_={@Autowired})
     private JWTUtils jwtUtils;
-    @PostMapping("/trainee")
-    @Operation(summary = "register new Trainee")
-    @Tag(name = "trainee")
+    @PostMapping("/student")
+    @Operation(summary = "register new student")
+    @Tag(name = "student")
     @Transactional
-    public ResponseEntity<Object> createTrainee(@RequestBody CreateTraineeRequest request){
-        CredentialsResponse result = traineeService.create(request);
+    public ResponseEntity<Object> createStudent(@RequestBody CreateStudentRequest request){
+        CredentialsResponse result = studentService.create(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");
     }
 
-    @PostMapping("/trainer")
-    @Operation(summary = "register new Trainer")
-    @Tag(name = "trainer")
+    @PostMapping("/mentor")
+    @Operation(summary = "register new mentor")
+    @Tag(name = "mentor")
     @Transactional
-    public ResponseEntity<Object> createTrainer(@RequestBody CreateTrainerRequest request){
-        CredentialsResponse result = trainerService.create(request);
+    public ResponseEntity<Object> createMentor(@RequestBody CreateMentorRequest request){
+        CredentialsResponse result = mentorService.create(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");
@@ -78,60 +78,60 @@ public class CredentialsController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/trainee/{username}/login")
+    @PostMapping("/student/{username}/login")
     @Operation(summary = "login")
-    @Tag(name = "trainee")
+    @Tag(name = "student")
     public ResponseEntity<Object> loginTrainee(@RequestBody String password,
                                                @PathVariable(name = "username") String username){
         if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
-        if (traineeService.get(username) == null)
-            throw new NoSuchEntityException("user is a trainer, not a trainee");
+        if (studentService.get(username) == null)
+            throw new NoSuchEntityException("user is a mentor, not a student");
 
         return prepareTokenResponse(username);
     }
 
-    @PostMapping("/trainer/{username}/login")
+    @PostMapping("/mentor/{username}/login")
     @Operation(summary = "login")
-    @Tag(name = "trainer")
+    @Tag(name = "mentor")
     public ResponseEntity<Object> loginTrainer(@RequestBody String password,
                                                @PathVariable(name = "username") String username){
         if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
-        if (trainerService.get(username) == null)
-            throw new NoSuchEntityException("user is a trainee, not a trainer");
+        if (mentorService.get(username) == null)
+            throw new NoSuchEntityException("user is a student, not a mentor");
 
         return prepareTokenResponse(username);
 
     }
 
-    @PostMapping("/trainee/{username}/password")
+    @PostMapping("/student/{username}/password")
     @Operation(summary = "change password", parameters = {
             @Parameter(in = ParameterIn.HEADER
                     , description = "user auth token"
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    @Tag(name = "trainee")
+    @Tag(name = "student")
     @Transactional
-    public ResponseEntity<Object> updateTraineePassword(@RequestBody UpdateCredentialsRequest request,
-                                        @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updateStudentPassword(@RequestBody UpdateCredentialsRequest request,
+                                                        @PathVariable(name = "username") String username){
         if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
     }
 
-    @PostMapping("/trainer/{username}/password")
+    @PostMapping("/mentor/{username}/password")
     @Operation(summary = "change password", parameters = {
             @Parameter(in = ParameterIn.HEADER
                     , description = "user auth token"
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    @Tag(name = "trainer")
+    @Tag(name = "mentor")
     @Transactional
-    public ResponseEntity<Object> updateTrainerPassword(@RequestBody UpdateCredentialsRequest request,
-                                        @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updateMentorPassword(@RequestBody UpdateCredentialsRequest request,
+                                                       @PathVariable(name = "username") String username){
         if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now

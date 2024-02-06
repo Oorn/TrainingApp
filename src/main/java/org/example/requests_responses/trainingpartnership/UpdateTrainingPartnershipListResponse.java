@@ -1,7 +1,7 @@
 package org.example.requests_responses.trainingpartnership;
 
 import lombok.*;
-import org.example.requests_responses.trainer.TrainerShortInfoResponse;
+import org.example.requests_responses.trainer.MentorShortInfoResponse;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTrainingPartnershipListResponse {
-    List<TrainerShortInfoResponse> trainersList;
+    List<MentorShortInfoResponse> mentorsList;
 }

@@ -1,9 +1,9 @@
 package org.example.converters;
 
-import org.example.domain_entities.Trainee;
-import org.example.domain_entities.Trainer;
+import org.example.domain_entities.Student;
+import org.example.domain_entities.Mentor;
 import org.example.domain_entities.Training;
-import org.example.domain_entities.TrainingPartnership;
+import org.example.domain_entities.Partnership;
 import org.example.requests_responses.training.TrainingInfoResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,20 +28,20 @@ class TrainingInfoResponseConverterTest {
         Instant dateTo = Instant.parse("2018-11-30T20:35:24.00Z");
         Duration duration = Duration.between(dateFrom, dateTo);
 
-        Trainee trainee = Mockito.mock(Trainee.class, Mockito.RETURNS_DEEP_STUBS);
-        Mockito.when(trainee.getUser().getUserName()).thenReturn(traineeUsername);
+        Student student = Mockito.mock(Student.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(student.getUser().getUserName()).thenReturn(traineeUsername);
 
-        Trainer trainer = Mockito.mock(Trainer.class, Mockito.RETURNS_DEEP_STUBS);
-        Mockito.when(trainer.getUser().getUserName()).thenReturn(trainerUsername);
-        Mockito.when(trainer.getSpecialization().getTrainingType()).thenReturn(type);
+        Mentor mentor = Mockito.mock(Mentor.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(mentor.getUser().getUserName()).thenReturn(trainerUsername);
+        Mockito.when(mentor.getSpecialization().getSpecialisationName()).thenReturn(type);
 
         Training training = Training.builder()
                 .trainingDateFrom(Timestamp.from(dateFrom))
                 .trainingDateTo(Timestamp.from(dateTo))
                 .trainingName(trainingName)
-                .trainingPartnership(TrainingPartnership.builder()
-                        .trainer(trainer)
-                        .trainee(trainee)
+                .partnership(Partnership.builder()
+                        .mentor(mentor)
+                        .student(student)
                         .build())
                 .build();
 
@@ -52,7 +52,7 @@ class TrainingInfoResponseConverterTest {
         assertEquals(duration, response.getDuration());
         assertEquals(trainingName, response.getName());
         assertEquals(type, response.getType());
-        assertEquals(traineeUsername, response.getTraineeUsername());
-        assertEquals(trainerUsername, response.getTrainerUsername());
+        assertEquals(traineeUsername, response.getStudentUsername());
+        assertEquals(trainerUsername, response.getMentorUsername());
     }
 }

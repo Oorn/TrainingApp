@@ -16,15 +16,15 @@ import java.util.List;
 public interface TrainingHibernateRepository extends JpaRepository<Training, Long> {
 
     @Query(value = "select t from Training t" +
-            " left join fetch t.trainingPartnership p" +
-            " left join fetch p.trainee te" +
-            " left join fetch te.user teu" +
-            " left join fetch p.trainer tr" +
-            " left join fetch tr.user tru" +
-            " left join fetch tr.specialization s" +
-            " where (:#{#filter.traineeName} is null or teu.userName = :#{#filter.traineeName})" +
-            " and (:#{#filter.trainerName} is null or tru.userName = :#{#filter.trainerName})" +
-            " and (:#{#filter.trainingType} is null or s.trainingType = :#{#filter.trainingType})" +
+            " left join fetch t.partnership p" +
+            " left join fetch p.student s" +
+            " left join fetch s.user su" +
+            " left join fetch p.mentor m" +
+            " left join fetch m.user mu" +
+            " left join fetch m.specialization sp" +
+            " where (:#{#filter.studentName} is null or su.userName = :#{#filter.studentName})" +
+            " and (:#{#filter.mentorName} is null or mu.userName = :#{#filter.mentorName})" +
+            " and (:#{#filter.specialisation} is null or sp.specialisationName = :#{#filter.specialisation})" +
             " and (cast(cast(:#{#filter.dateFrom} as text) as timestamp) is null or t.trainingDateTo > :#{#filter.dateFrom})" +
             " and (cast(cast(:#{#filter.dateTo} as text) as timestamp) is null or t.trainingDateFrom < :#{#filter.dateTo})")
     List<Training> findTrainingByFilter(@Param("filter") TrainingSearchFilter filter);

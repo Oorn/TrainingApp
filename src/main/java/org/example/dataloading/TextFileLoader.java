@@ -2,11 +2,11 @@ package org.example.dataloading;
 
 import lombok.Setter;
 import org.example.controller.*;
-import org.example.requests_responses.trainee.CreateTraineeRequest;
-import org.example.requests_responses.trainee.UpdateTraineeProfileRequest;
-import org.example.requests_responses.trainer.CreateTrainerRequest;
-import org.example.requests_responses.trainer.UpdateTrainerProfileRequest;
-import org.example.requests_responses.training.CreateTrainingForTraineeRequest;
+import org.example.requests_responses.trainee.CreateStudentRequest;
+import org.example.requests_responses.trainee.UpdateStudentProfileRequest;
+import org.example.requests_responses.trainer.CreateMentorRequest;
+import org.example.requests_responses.trainer.UpdateMentorProfileRequest;
+import org.example.requests_responses.training.CreateTrainingForStudentRequest;
 import org.example.requests_responses.trainingpartnership.UpdateTrainingPartnershipListRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+//TODO convert to student-mentor scheme
 /*
 Supported commands:
 
@@ -41,19 +42,19 @@ public class TextFileLoader {
     private CredentialsController credentialsController;
 
     @Setter(onMethod_={@Autowired})
-    private TraineeController traineeController;
+    private StudentController studentController;
 
     @Setter(onMethod_={@Autowired})
-    private TrainerController trainerController;
+    private MentorController mentorController;
 
     @Setter(onMethod_={@Autowired})
     private TrainingController trainingController;
 
     @Setter(onMethod_={@Autowired})
-    private TrainingTypeController trainingTypeController;
+    private SpecialisationController specialisationController;
 
     boolean isLoadingRequired() {
-        return ((List<String>) Objects.requireNonNull(trainingTypeController.getAllTrainingTypes().getBody())).isEmpty();
+        return ((List<String>) Objects.requireNonNull(specialisationController.getAllSpecialisations().getBody())).isEmpty();
     }
 
     @PostConstruct
@@ -80,37 +81,37 @@ public class TextFileLoader {
                 case "register-trainee":
                     if (argCount != 5)
                         throw new Exception("incorrect parameter count. Command format: register-trainee String(firstname) String(lastname) Instant(dateOfBirth) String(address)");
-                    credentialsController.createTrainee(new CreateTraineeRequest(tokens[1], tokens[2], tokens[3], tokens[4]));
+                    credentialsController.createStudent(new CreateStudentRequest(tokens[1], tokens[2], tokens[3], tokens[4]));
                     break;
                 case "register-trainer":
                     if (argCount != 4)
                         throw new Exception("incorrect parameter count. Command format: register-trainer String(firstname) String(lastname) String(trainingType)");
-                    credentialsController.createTrainer(new CreateTrainerRequest(tokens[1], tokens[2], tokens[3]));
+                    credentialsController.createMentor(new CreateMentorRequest(tokens[1], tokens[2], tokens[3]));
                     break;
                 case "update-trainee":
                     if (argCount != 7)
                         throw new Exception("incorrect parameter count. Command format: update-trainee String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)");
-                    traineeController.updateTrainee(new UpdateTraineeProfileRequest(tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]), tokens[1]);
+                    studentController.updateStudent(new UpdateStudentProfileRequest(tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]), tokens[1]);
                     break;
                 case "update-trainer":
                     if (argCount != 5)
                         throw new Exception("incorrect parameter count. Command format: update-trainer String(username) String(new firstname) String(new lastname) boolean(new isActive)");
-                    trainerController.updateTrainer(new UpdateTrainerProfileRequest(tokens[2], tokens[3], tokens[4]), tokens[1]);
+                    mentorController.updateMentor(new UpdateMentorProfileRequest(tokens[2], tokens[3], tokens[4]), tokens[1]);
                     break;
                 case "update-partnerships":
                     if (argCount == 1)
                         throw new Exception("incorrect parameter count. Command format: update-partnerships String(trainee) String(trainers)...");
-                    traineeController.updatePartnerships(new UpdateTrainingPartnershipListRequest(Arrays.copyOfRange(tokens, 2, argCount)), tokens[1]);
+                    studentController.updatePartnerships(new UpdateTrainingPartnershipListRequest(Arrays.copyOfRange(tokens, 2, argCount)), tokens[1]);
                     break;
                 case "add-training":
                     if (argCount != 6)
                         throw new Exception("incorrect parameter count. Command format: add-training String(trainee) String(trainer) String(name) Instant(date) Duration(duration)");
-                    trainingController.createTraineeTraining(new CreateTrainingForTraineeRequest(tokens[2], tokens[3], tokens[4], tokens[5]), tokens[1]);
+                    trainingController.createStudentTraining(new CreateTrainingForStudentRequest(tokens[2], tokens[3], tokens[4], tokens[5]), tokens[1]);
                     break;
                 case "add-training-type":
                     if (argCount != 2)
                         throw new Exception("incorrect parameter count. Command format: add-training-type String(name)");
-                    trainingTypeController.createTrainingType(tokens[1]);
+                    specialisationController.createSpecialisation(tokens[1]);
                     break;
                 default:
                     if (!tokens[0].startsWith("/") && !tokens[0].equals(""))
