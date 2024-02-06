@@ -1,8 +1,7 @@
 package org.example.service.impl;
 
 import org.example.domain_entities.*;
-import org.example.repository.TrainerRepository;
-import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
+import org.example.repository.TrainerHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
 import org.example.requests_responses.trainer.UpdateTrainerProfileRequest;

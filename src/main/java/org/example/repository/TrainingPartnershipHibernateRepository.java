@@ -1,4 +1,4 @@
-package org.example.repository.impl.v2.hibernate;
+package org.example.repository;
 
 import org.example.domain_entities.TrainingPartnership;
 import org.springframework.data.jpa.repository.JpaRepository;

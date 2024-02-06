@@ -3,8 +3,7 @@ package org.example.service.impl;
 
 import org.example.domain_entities.User;
 import org.example.exceptions.NoPermissionException;
-import org.example.repository.UserRepository;
-import org.example.repository.impl.v2.hibernate.UserHibernateRepository;
+import org.example.repository.UserHibernateRepository;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsServiceUtils;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

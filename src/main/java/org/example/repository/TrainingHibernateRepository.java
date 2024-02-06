@@ -1,4 +1,4 @@
-package org.example.repository.impl.v2.hibernate;
+package org.example.repository;
 
 import org.example.domain_entities.Training;
 import org.example.repository.dto.TrainingSearchFilter;

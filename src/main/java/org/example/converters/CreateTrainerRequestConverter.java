@@ -1,12 +1,10 @@
 package org.example.converters;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.User;
 import org.example.exceptions.NoSuchEntityException;
-import org.example.repository.TrainingTypeRepository;
-import org.example.repository.impl.v2.hibernate.TrainingTypeHibernateRepository;
+import org.example.repository.TrainingTypeHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;

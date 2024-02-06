@@ -1,15 +1,12 @@
 package org.example.service.impl;
 
-import lombok.Setter;
 import org.example.domain_entities.TrainingType;
-import org.example.repository.TrainingTypeRepository;
-import org.example.repository.impl.v2.hibernate.TrainingTypeHibernateRepository;
+import org.example.repository.TrainingTypeHibernateRepository;
 import org.example.service.TrainingTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

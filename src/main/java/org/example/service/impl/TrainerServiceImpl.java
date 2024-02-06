@@ -1,14 +1,10 @@
 package org.example.service.impl;
 
 import lombok.Setter;
-import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
-import org.example.repository.TrainerRepository;
-import org.example.repository.UserRepository;
-import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
-import org.example.requests_responses.trainee.TraineeFullInfoResponse;
+import org.example.repository.TrainerHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
 import org.example.requests_responses.trainer.UpdateTrainerProfileRequest;

@@ -1,15 +1,11 @@
 package org.example.service.impl;
 
-import lombok.Setter;
 import org.example.domain_entities.Trainee;
 import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingPartnership;
-import org.example.repository.TraineeRepository;
-import org.example.repository.TrainerRepository;
-import org.example.repository.TrainingPartnershipRepository;
-import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
-import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
-import org.example.repository.impl.v2.hibernate.TrainingPartnershipHibernateRepository;
+import org.example.repository.TraineeHibernateRepository;
+import org.example.repository.TrainerHibernateRepository;
+import org.example.repository.TrainingPartnershipHibernateRepository;
 import org.example.requests_responses.trainer.TrainerShortInfoResponse;
 import org.example.requests_responses.trainingpartnership.AvailableTrainersResponse;
 import org.example.requests_responses.trainingpartnership.UpdateTrainingPartnershipListRequest;
