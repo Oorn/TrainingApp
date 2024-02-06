@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +48,7 @@ class TraineeFullInfoResponseConverterTest {
                 .isActive(isActive)
                 .build();
         Trainee trainee = Trainee.builder()
-                .dateOfBirth(dateOfBirth)
+                .dateOfBirth(Timestamp.from(dateOfBirth))
                 .isRemoved(isRemoved)
                 .address(address)
                 .trainingPartnerships(partnerships)
@@ -76,7 +77,7 @@ class TraineeFullInfoResponseConverterTest {
 
         assert response != null;
         assertEquals(address, response.getAddress());
-        assertEquals(dateOfBirth, response.getDateOfBirth());
+        assertEquals(dateOfBirth, response.getDateOfBirth().toInstant());
         assertEquals(firstName, response.getFirstName());
         assertEquals(isActive, response.isActive());
         assertEquals(lastName, response.getLastName());

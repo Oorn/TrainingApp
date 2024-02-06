@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TrainingTypeHibernateRepository extends CrudRepository<TrainingType, Long>
-        , JpaRepository<TrainingType, Long>
-        , PagingAndSortingRepository<TrainingType, Long> {
+public interface TrainingTypeHibernateRepository extends JpaRepository<TrainingType, Long> {
     Optional<TrainingType> findTrainingTypeByTrainingType(String trainingType);
 }

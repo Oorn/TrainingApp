@@ -3,6 +3,7 @@ package org.example.requests_responses.trainee;
 import lombok.*;
 import org.example.requests_responses.trainer.TrainerShortInfoResponse;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ public class TraineeFullInfoResponse {
 
     private String lastName;
 
-    private Instant dateOfBirth;
+    private Timestamp dateOfBirth;
 
     private String address;
 

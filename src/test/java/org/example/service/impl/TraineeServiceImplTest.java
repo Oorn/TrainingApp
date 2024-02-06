@@ -5,6 +5,7 @@ import org.example.domain_entities.Training;
 import org.example.domain_entities.TrainingPartnership;
 import org.example.domain_entities.User;
 import org.example.repository.TraineeRepository;
+import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
 import org.example.requests_responses.trainee.TraineeFullInfoResponse;
 import org.example.requests_responses.trainee.UpdateTraineeProfileRequest;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Optional;
@@ -33,7 +35,7 @@ class TraineeServiceImplTest {
     @Mock
     private CredentialsServiceUtils credentialsServiceUtils;
     @Mock
-    private TraineeRepository traineeRepository;
+    private TraineeHibernateRepository traineeRepository;
     @Mock
     private ConversionService converter;
 
@@ -62,7 +64,7 @@ class TraineeServiceImplTest {
         assertEquals(password, response.getPassword());
         verify(credentialsService, times(1)).generateUsername(firstName, lastName);
         verify(credentialsServiceUtils, times(1)).generateRandomPassword();
-        verify(traineeRepository, times(1)).save(trainee);
+        verify(traineeRepository, times(1)).saveAndFlush(trainee);
         verify(credentialsServiceUtils, times(1)).setUserPassword(user, password);
         verify(user, times(1)).setUserName(username);
     }
@@ -73,12 +75,12 @@ class TraineeServiceImplTest {
         Trainee trainee = mock(Trainee.class);
         TraineeFullInfoResponse expectedResponse = mock(TraineeFullInfoResponse.class);
 
-        when(traineeRepository.get(username)).thenReturn(Optional.of(trainee));
+        when(traineeRepository.findTraineeByUsername(username)).thenReturn(Optional.of(trainee));
         when(converter.convert(trainee, TraineeFullInfoResponse.class)).thenReturn(expectedResponse);
 
         TraineeFullInfoResponse response = service.get(username);
         assertEquals(expectedResponse, response);
-        verify(traineeRepository, times(1)).get(username);
+        verify(traineeRepository, times(1)).findTraineeByUsername(username);
         verify(converter, times(1)).convert(trainee,TraineeFullInfoResponse.class);
     }
 
@@ -99,24 +101,24 @@ class TraineeServiceImplTest {
                 .build();
         UpdateTraineeProfileRequest request = UpdateTraineeProfileRequest.builder()
                 .address(address)
-                .dateOfBirth(dateOfBirth)
+                .dateOfBirth(Timestamp.from(dateOfBirth))
                 .firstName(firstName)
                 .lastName(lastName)
                 .isActive(isActive)
                 .build();
         TraineeFullInfoResponse expectedResponse = new TraineeFullInfoResponse();
 
-        when(traineeRepository.get(username)).thenReturn(Optional.of(trainee));
+        when(traineeRepository.findTraineeByUsername(username)).thenReturn(Optional.of(trainee));
         when(converter.convert(trainee, TraineeFullInfoResponse.class)).thenReturn(expectedResponse);
 
         TraineeFullInfoResponse response = service.update(username, request);
         assertEquals(address, trainee.getAddress());
-        assertEquals(dateOfBirth, trainee.getDateOfBirth());
+        assertEquals(dateOfBirth, trainee.getDateOfBirth().toInstant());
         assertEquals(firstName, trainee.getUser().getFirstName());
         assertEquals(lastName, trainee.getUser().getLastName());
         assertEquals(isActive, trainee.getUser().isActive());
         assertEquals(isActive, partnership.isRemoved());
-        verify(traineeRepository, times(1)).save(trainee);
+        verify(traineeRepository, times(1)).saveAndFlush(trainee);
     }
 
     @Test
@@ -137,10 +139,10 @@ class TraineeServiceImplTest {
                 .user(User.builder().build())
                 .build();
 
-        when(traineeRepository.get(username)).thenReturn(Optional.of(trainee));
+        when(traineeRepository.findTraineeByUsername(username)).thenReturn(Optional.of(trainee));
 
         service.delete(username);
-        verify(traineeRepository, times(1)).save(trainee);
+        verify(traineeRepository, times(1)).saveAndFlush(trainee);
         assert trainee.isRemoved();
         assert trainee.getUser().isRemoved();
         assert partnership.isRemoved();

@@ -4,6 +4,7 @@ import org.example.domain_entities.Trainer;
 import org.example.domain_entities.TrainingType;
 import org.example.domain_entities.User;
 import org.example.repository.TrainingTypeRepository;
+import org.example.repository.impl.v2.hibernate.TrainingTypeHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CreateTrainerRequestConverterTest {
 
     @Mock
-    private TrainingTypeRepository trainingTypeRepository;
+    private TrainingTypeHibernateRepository trainingTypeRepository;
     @InjectMocks
     CreateTrainerRequestConverter converter;
 
@@ -31,7 +32,7 @@ class CreateTrainerRequestConverterTest {
         String specialisation = "specialisation";
         TrainingType trainingType = TrainingType.builder().trainingType(specialisation).build();
 
-        Mockito.when(trainingTypeRepository.get(specialisation)).thenReturn(Optional.ofNullable(trainingType));
+        Mockito.when(trainingTypeRepository.findTrainingTypeByTrainingType(specialisation)).thenReturn(Optional.ofNullable(trainingType));
 
         CreateTrainerRequest request = CreateTrainerRequest.builder()
                 .firstName(firstName)

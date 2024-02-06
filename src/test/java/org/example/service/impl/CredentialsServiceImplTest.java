@@ -4,6 +4,7 @@ package org.example.service.impl;
 import org.example.domain_entities.User;
 import org.example.exceptions.NoPermissionException;
 import org.example.repository.UserRepository;
+import org.example.repository.impl.v2.hibernate.UserHibernateRepository;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsServiceUtils;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class CredentialsServiceImplTest {
     @Mock
     private CredentialsServiceUtils credentialsServiceUtils;
     @Mock
-    private UserRepository userRepository;
+    private UserHibernateRepository userRepository;
     @InjectMocks
     CredentialsServiceImpl credentialsService;
 
@@ -35,7 +36,7 @@ class CredentialsServiceImplTest {
         String username = "username", passwordRight = "passwordRight", passwordWrong = "passwordWrong";
         User user = User.builder().build();
 
-        when(userRepository.get(username)).thenReturn(Optional.of(user));
+        when(userRepository.findUserByUserName(username)).thenReturn(Optional.of(user));
         when(credentialsServiceUtils.validateUserPassword(user,passwordRight)).thenReturn(true);
         when(credentialsServiceUtils.validateUserPassword(user,passwordWrong)).thenReturn(false);
 
@@ -54,7 +55,7 @@ class CredentialsServiceImplTest {
                 .build();
         User user = User.builder().build();
 
-        when(userRepository.get(username)).thenReturn(Optional.of(user));
+        when(userRepository.findUserByUserName(username)).thenReturn(Optional.of(user));
         when(credentialsServiceUtils.validateUserPassword(user,passwordOld)).thenReturn(true);
         when(credentialsServiceUtils.validatePasswordRequirements(passwordNew)).thenReturn(true);
 
@@ -73,9 +74,9 @@ class CredentialsServiceImplTest {
                         .userName(s)
                         .build())
                 .collect(Collectors.toList());
-        when(userRepository.getAllByPrefix(candidateUsername)).thenReturn(existingPrefixUsers);
+        when(userRepository.findUsersByUserNameIsStartingWith(candidateUsername)).thenReturn(existingPrefixUsers);
 
         assertEquals(expectedUsername, credentialsService.generateUsername(firstName,lastName));
-        verify(userRepository, times(1)).getAllByPrefix(candidateUsername);
+        verify(userRepository, times(1)).findUsersByUserNameIsStartingWith(candidateUsername);
     }
 }

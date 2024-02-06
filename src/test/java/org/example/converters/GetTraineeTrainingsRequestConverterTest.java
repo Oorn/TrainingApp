@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,8 +24,8 @@ class GetTraineeTrainingsRequestConverterTest {
         Instant dateTo = Instant.parse("2018-11-30T20:35:24.00Z");
 
         GetTraineeTrainingsRequest request = GetTraineeTrainingsRequest.builder()
-                .dateFrom(dateFrom)
-                .dateTo(dateTo)
+                .dateFrom(Timestamp.from(dateFrom))
+                .dateTo(Timestamp.from(dateTo))
                 .trainerUsername(trainer)
                 .type(type)
                 .build();
@@ -33,8 +34,8 @@ class GetTraineeTrainingsRequestConverterTest {
         assert filter != null;
         assertEquals(trainer, filter.getTrainerName());
         assertEquals(type, filter.getTrainingType());
-        assertEquals(dateFrom, filter.getDateFrom());
-        assertEquals(dateTo, filter.getDateTo());
+        assertEquals(dateFrom, filter.getDateFrom().toInstant());
+        assertEquals(dateTo, filter.getDateTo().toInstant());
         assertNull(filter.getTraineeName());
     }
 }

@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import org.example.domain_entities.*;
 import org.example.repository.TrainerRepository;
+import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
 import org.example.requests_responses.trainer.UpdateTrainerProfileRequest;
@@ -29,7 +30,7 @@ class TrainerServiceImplTest {
     @Mock
     private CredentialsServiceUtils credentialsServiceUtils;
     @Mock
-    private TrainerRepository trainerRepository;
+    private TrainerHibernateRepository trainerRepository;
     @Mock
     private ConversionService converter;
 
@@ -59,7 +60,7 @@ class TrainerServiceImplTest {
         assertEquals(password, response.getPassword());
         verify(credentialsService, times(1)).generateUsername(firstName, lastName);
         verify(credentialsServiceUtils, times(1)).generateRandomPassword();
-        verify(trainerRepository, times(1)).save(trainer);
+        verify(trainerRepository, times(1)).saveAndFlush(trainer);
         verify(credentialsServiceUtils, times(1)).setUserPassword(user, password);
         verify(user, times(1)).setUserName(username);
     }
@@ -70,12 +71,12 @@ class TrainerServiceImplTest {
         Trainer trainer = mock(Trainer.class);
         TrainerFullInfoResponse expectedResponse = mock(TrainerFullInfoResponse.class);
 
-        when(trainerRepository.get(username)).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findTrainerByUsername(username)).thenReturn(Optional.of(trainer));
         when(converter.convert(trainer, TrainerFullInfoResponse.class)).thenReturn(expectedResponse);
 
         TrainerFullInfoResponse response = service.get(username);
         assertEquals(expectedResponse, response);
-        verify(trainerRepository, times(1)).get(username);
+        verify(trainerRepository, times(1)).findTrainerByUsername(username);
         verify(converter, times(1)).convert(trainer,TrainerFullInfoResponse.class);
     }
 
@@ -100,7 +101,7 @@ class TrainerServiceImplTest {
                 .build();
         TrainerFullInfoResponse expectedResponse = new TrainerFullInfoResponse();
 
-        when(trainerRepository.get(username)).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findTrainerByUsername(username)).thenReturn(Optional.of(trainer));
         when(converter.convert(trainer, TrainerFullInfoResponse.class)).thenReturn(expectedResponse);
 
         TrainerFullInfoResponse response = service.update(username, request);
@@ -109,6 +110,6 @@ class TrainerServiceImplTest {
         assertEquals(lastName, trainer.getUser().getLastName());
         assertEquals(isActive, trainer.getUser().isActive());
         assertEquals(isActive, partnership.isRemoved());
-        verify(trainerRepository, times(1)).save(trainer);
+        verify(trainerRepository, times(1)).saveAndFlush(trainer);
     }
 }

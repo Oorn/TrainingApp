@@ -2,6 +2,7 @@ package org.example.requests_responses.training;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class TrainingInfoResponse {
 
     private String type;
 
-    private Instant date;
+    private Timestamp date;
 
     private Duration duration;
 }

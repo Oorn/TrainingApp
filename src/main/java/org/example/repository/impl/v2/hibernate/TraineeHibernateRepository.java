@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TraineeHibernateRepository extends CrudRepository<Trainee, Long>
-        , JpaRepository<Trainee, Long>
-        , PagingAndSortingRepository<Trainee, Long> {
+public interface TraineeHibernateRepository extends JpaRepository<Trainee, Long> {
 
     @Query(value = "select t from Trainee t" +
             " left join fetch t.user u" +

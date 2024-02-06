@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 @Primary
+@Deprecated
 public class UserRepositoryMiddle implements UserRepository {
     @Setter(onMethod_={@Autowired})
     private UserHibernateRepository hibernateUser;

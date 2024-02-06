@@ -8,8 +8,6 @@ import org.example.exceptions.NoSuchEntityException;
 import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
-import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
-import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
 import org.example.repository.impl.v2.hibernate.TrainingPartnershipHibernateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -19,10 +17,10 @@ import org.springframework.stereotype.Repository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 @Primary
+@Deprecated
 public class TrainingPartnershipRepositoryMiddle implements TrainingPartnershipRepository {
     @Setter(onMethod_={@Autowired})
     private TrainingPartnershipHibernateRepository hibernatePartnership;
@@ -33,7 +31,7 @@ public class TrainingPartnershipRepositoryMiddle implements TrainingPartnershipR
 
     @Override
     public Optional<TrainingPartnership> getByTraineeTrainer(String traineeName, String trainerName) {
-        return hibernatePartnership.findPartnershipByTrainerTraineeUsernames(traineeName, trainerName);
+        return hibernatePartnership.findPartnershipByTraineeTrainerUsernames(traineeName, trainerName);
     }
 
     @Override
@@ -103,6 +101,6 @@ public class TrainingPartnershipRepositoryMiddle implements TrainingPartnershipR
 
     @Override
     public TrainingPartnership save(TrainingPartnership entity) {
-        return hibernatePartnership.save(entity);
+        return hibernatePartnership.saveAndFlush(entity);
     }
 }

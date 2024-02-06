@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 @Primary
+@Deprecated
 public class TraineeRepositoryMiddle implements TraineeRepository {
     @Setter(onMethod_={@Autowired})
     private TraineeHibernateRepository hibernateTrainee;

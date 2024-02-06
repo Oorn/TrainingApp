@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class UpdateTraineeProfileRequest {
 
     private String lastName;
 
-    private Instant dateOfBirth;
+    private Timestamp dateOfBirth;
 
     private String address;
 
@@ -30,7 +31,7 @@ public class UpdateTraineeProfileRequest {
     public UpdateTraineeProfileRequest(String firstName, String lastName, String dateOfBirth, String address, String isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.dateOfBirth = Instant.parse(dateOfBirth);
+        this.dateOfBirth = Timestamp.from(Instant.parse(dateOfBirth));
         this.address = address;
         this.isActive = Boolean.parseBoolean(isActive);
     }

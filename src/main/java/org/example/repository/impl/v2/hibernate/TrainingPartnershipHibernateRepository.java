@@ -3,17 +3,13 @@ package org.example.repository.impl.v2.hibernate;
 import org.example.domain_entities.TrainingPartnership;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TrainingPartnershipHibernateRepository extends CrudRepository<TrainingPartnership, Long>
-        , JpaRepository<TrainingPartnership, Long>
-        , PagingAndSortingRepository<TrainingPartnership, Long> {
+public interface TrainingPartnershipHibernateRepository extends JpaRepository<TrainingPartnership, Long> {
 
     @Query(value = "select p from TrainingPartnership p" +
             " left join fetch p.trainee te" +
@@ -33,5 +29,5 @@ public interface TrainingPartnershipHibernateRepository extends CrudRepository<T
             " left join fetch p.trainee te" +
             " left join fetch te.user teu" +
             " where tru.userName = :trainerName and teu.userName = :traineeName")
-    Optional<TrainingPartnership> findPartnershipByTrainerTraineeUsernames(String traineeName, String trainerName);
+    Optional<TrainingPartnership> findPartnershipByTraineeTrainerUsernames(String traineeName, String trainerName);
 }

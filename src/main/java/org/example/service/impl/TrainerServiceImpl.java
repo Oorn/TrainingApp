@@ -7,6 +7,7 @@ import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
 import org.example.repository.TrainerRepository;
 import org.example.repository.UserRepository;
+import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
 import org.example.requests_responses.trainee.TraineeFullInfoResponse;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 import org.example.requests_responses.trainer.TrainerFullInfoResponse;
@@ -29,8 +30,10 @@ public class TrainerServiceImpl implements TrainerService {
     @Setter(onMethod_={@Autowired})
     private CredentialsService credentialsService;
 
-    @Setter(onMethod_={@Autowired})
-    private TrainerRepository trainerRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TrainerRepository trainerRepository;
+    @Autowired
+    private TrainerHibernateRepository trainerHibernateRepository;
 
     @Setter(onMethod_={@Autowired})
     private ConversionService converter;
@@ -43,7 +46,7 @@ public class TrainerServiceImpl implements TrainerService {
         newTrainer.getUser().setUserName(username);
         credentialsServiceUtils.setUserPassword(newTrainer.getUser(),password);
 
-        trainerRepository.save(newTrainer);
+        trainerHibernateRepository.saveAndFlush(newTrainer);
 
         return CredentialsResponse.builder()
                 .username(username)
@@ -53,7 +56,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerFullInfoResponse get(String username) {
-        Trainer trainer = trainerRepository.get(username).orElse(null);
+        Trainer trainer = trainerHibernateRepository.findTrainerByUsername(username).orElse(null);
         if (trainer == null)
             throw new NoSuchEntityException("trainer not found");
         if (trainer.isRemoved())
@@ -63,7 +66,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerFullInfoResponse update(String authUsername, UpdateTrainerProfileRequest request) {
-        Trainer trainer = trainerRepository.get(authUsername).orElse(null);
+        Trainer trainer = trainerHibernateRepository.findTrainerByUsername(authUsername).orElse(null);
         if (trainer == null)
             throw new NoSuchEntityException("trainer not found");
         if (trainer.isRemoved())
@@ -75,7 +78,7 @@ public class TrainerServiceImpl implements TrainerService {
         if (request.isActive())
             trainer.getTrainingPartnerships().forEach(tp->tp.setRemoved(true)); //automatically remove partnerships of inactive users (but not trainings)
 
-        trainerRepository.save(trainer);
+        trainerHibernateRepository.saveAndFlush(trainer);
 
         return converter.convert(trainer, TrainerFullInfoResponse.class);
     }

@@ -6,6 +6,7 @@ import org.example.domain_entities.Trainer;
 import org.example.domain_entities.User;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.repository.TrainingTypeRepository;
+import org.example.repository.impl.v2.hibernate.TrainingTypeHibernateRepository;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import java.util.HashSet;
 @RequiredArgsConstructor
 public class CreateTrainerRequestConverter implements Converter<CreateTrainerRequest, Trainer> {
 
-    @Setter(onMethod_={@Autowired})
-    private TrainingTypeRepository trainingTypeRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TrainingTypeRepository trainingTypeRepository;
+    @Autowired
+    private TrainingTypeHibernateRepository trainingTypeHibernateRepository;
 
     @Override
     public Trainer convert(CreateTrainerRequest request) {
@@ -29,7 +32,7 @@ public class CreateTrainerRequestConverter implements Converter<CreateTrainerReq
                 .isActive(true)
                 .build();
         Trainer newTrainer = Trainer.builder()
-                .specialization(trainingTypeRepository.get(request.getSpecialisation())
+                .specialization(trainingTypeHibernateRepository.findTrainingTypeByTrainingType(request.getSpecialisation())
                         .orElseThrow(()->new NoSuchEntityException("training type \"" + request.getSpecialisation() + "\" not found")))
                 .trainingPartnerships(new HashSet<>())
                 .user(newUser)

@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserHibernateRepository extends CrudRepository<User, Long>
-        , JpaRepository<User, Long>
-        , PagingAndSortingRepository<User, Long> {
+public interface UserHibernateRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUserName(String userName);
     List<User> findUsersByUserNameIsStartingWith(String prefix);
 }

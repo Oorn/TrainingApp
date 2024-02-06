@@ -7,6 +7,7 @@ import org.example.domain_entities.TrainingPartnership;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface TrainingPartnershipRepository {
 
     Optional<TrainingPartnership> getByTraineeTrainer(String traineeName, String trainerName);

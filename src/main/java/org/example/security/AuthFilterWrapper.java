@@ -133,7 +133,7 @@ public class AuthFilterWrapper {
             return;
         }
 
-        //finally, issue auth
+        //finally, grant auth
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(authUser, null, AuthorityUtils.NO_AUTHORITIES);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));

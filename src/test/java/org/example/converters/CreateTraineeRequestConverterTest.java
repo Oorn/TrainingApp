@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +26,7 @@ class CreateTraineeRequestConverterTest {
 
         CreateTraineeRequest request = CreateTraineeRequest.builder()
                 .firstName(firstName)
-                .dateOfBirth(dateOfBirth)
+                .dateOfBirth(Timestamp.from(dateOfBirth))
                 .lastName(lastName)
                 .address(address)
                 .build();
@@ -33,7 +34,7 @@ class CreateTraineeRequestConverterTest {
         Trainee trainee = converter.convert(request);
         assert trainee != null;
         assertEquals(address, trainee.getAddress());
-        assertEquals(dateOfBirth, trainee.getDateOfBirth());
+        assertEquals(dateOfBirth, trainee.getDateOfBirth().toInstant());
         assert !trainee.isRemoved();
 
         User user = trainee.getUser();

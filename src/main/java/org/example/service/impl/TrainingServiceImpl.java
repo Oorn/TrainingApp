@@ -5,14 +5,18 @@ import org.example.domain_entities.*;
 import org.example.exceptions.BadRequestException;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
-import org.example.repository.*;
 import org.example.repository.dto.TrainingSearchFilter;
+import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
+import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
+import org.example.repository.impl.v2.hibernate.TrainingHibernateRepository;
+import org.example.repository.impl.v2.hibernate.TrainingPartnershipHibernateRepository;
 import org.example.requests_responses.training.*;
 import org.example.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,17 +25,25 @@ import java.util.stream.Collectors;
 @Service
 public class TrainingServiceImpl implements TrainingService {
 
-    @Setter(onMethod_={@Autowired})
-    private TrainerRepository trainerRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TrainerRepository trainerRepository;
+    @Autowired
+    private TrainerHibernateRepository trainerHibernateRepository;
 
-    @Setter(onMethod_={@Autowired})
-    private TraineeRepository traineeRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TraineeRepository traineeRepository;
+    @Autowired
+    private TraineeHibernateRepository traineeHibernateRepository;
 
-    @Setter(onMethod_={@Autowired})
-    private TrainingRepository trainingRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TrainingRepository trainingRepository;
+    @Autowired
+    private TrainingHibernateRepository trainingHibernateRepository;
 
-    @Setter(onMethod_={@Autowired})
-    private TrainingPartnershipRepository trainingPartnershipRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TrainingPartnershipRepository trainingPartnershipRepository;
+    @Autowired
+    private TrainingPartnershipHibernateRepository trainingPartnershipHibernateRepository;
 
     @Setter(onMethod_={@Autowired})
     private ConversionService converter;
@@ -39,7 +51,7 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public boolean create(String authUsername, CreateTrainingForTraineeRequest request) {
-        TrainingPartnership partnership = trainingPartnershipRepository.getByTraineeTrainer(authUsername, request.getTrainerUsername()).orElseThrow(()->new NoSuchEntityException("training partnership not found"));
+        TrainingPartnership partnership = trainingPartnershipHibernateRepository.findPartnershipByTraineeTrainerUsernames(authUsername, request.getTrainerUsername()).orElseThrow(()->new NoSuchEntityException("training partnership not found"));
 
         if (partnership.getTrainee().getUser().isRemoved())
             throw new RemovedEntityException("trainee has been removed");
@@ -48,17 +60,17 @@ public class TrainingServiceImpl implements TrainingService {
         if (!partnership.getTrainee().getUser().isActive())
             throw new RemovedEntityException("trainee is inactive");
         if (partnership.isRemoved())
-            throw new RemovedEntityException("training partnership has been removed (and can be restored)");
+            throw new RemovedEntityException("training partnership has been removed");
 
         Training training = Training.builder()
                 .trainingName(request.getName())
                 .isRemoved(false)
                 .trainingPartnership(partnership)
                 .trainingDateFrom(request.getDate())
-                .trainingDateTo(request.getDate().plus(request.getDuration()))
+                .trainingDateTo(Timestamp.from(request.getDate().toInstant().plus(request.getDuration())))
                 .build();
 
-        trainingRepository.save(training);
+        trainingHibernateRepository.saveAndFlush(training);
         return true;
     }
     @Override
@@ -79,7 +91,7 @@ public class TrainingServiceImpl implements TrainingService {
         filter.setTraineeName(authUsername);
         if (filter.getTraineeName() == null)
             throw new BadRequestException("requires trainee username");
-        Optional<Trainee> traineeOptional = traineeRepository.get(filter.getTraineeName());
+        Optional<Trainee> traineeOptional = traineeHibernateRepository.findTraineeByUsername(filter.getTraineeName());
         if (traineeOptional.isEmpty())
             throw new NoSuchElementException("trainee not found");
         if (traineeOptional.get().isRemoved())
@@ -87,7 +99,7 @@ public class TrainingServiceImpl implements TrainingService {
 
 
         return MultipleTrainingInfoResponse.builder()
-                .trainings(trainingRepository.getTrainingsByFilter(filter).stream()
+                .trainings(trainingHibernateRepository.findTrainingByFilter(filter).stream()
                         .filter(t->!t.getTrainingPartnership().getTrainer().isRemoved()) //not needed because trainers can't be removed
                         .map(t->converter.convert(t, TrainingInfoResponse.class))
                         .collect(Collectors.toList()))
@@ -100,14 +112,14 @@ public class TrainingServiceImpl implements TrainingService {
         filter.setTrainerName(authUsername);
         if (filter.getTrainerName() == null)
             throw new BadRequestException("requires trainer username");
-        Optional<Trainer> trainerOptional = trainerRepository.get(filter.getTrainerName());
+        Optional<Trainer> trainerOptional = trainerHibernateRepository.findTrainerByUsername(filter.getTrainerName());
         if (trainerOptional.isEmpty())
             throw new NoSuchElementException("trainee not found");
         if (trainerOptional.get().isRemoved())
             throw new RemovedEntityException("trainee has been removed");
 
         return MultipleTrainingInfoResponse.builder()
-                .trainings(trainingRepository.getTrainingsByFilter(filter).stream()
+                .trainings(trainingHibernateRepository.findTrainingByFilter(filter).stream()
                         .filter(t->!t.getTrainingPartnership().getTrainee().isRemoved()) //don't show trainings from removed trainees
                         .map(t->converter.convert(t, TrainingInfoResponse.class))
                         .collect(Collectors.toList()))

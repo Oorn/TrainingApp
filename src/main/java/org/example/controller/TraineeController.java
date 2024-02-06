@@ -110,7 +110,7 @@ public class TraineeController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     @Transactional
-    public ResponseEntity<Object> updatePartnerships(@ModelAttribute @RequestBody UpdateTrainingPartnershipListRequest request,
+    public ResponseEntity<Object> updatePartnerships(@RequestBody UpdateTrainingPartnershipListRequest request,
                                                      @PathVariable(name = "username") String username){
         UpdateTrainingPartnershipListResponse result = partnershipService.updateTraineeTrainerList(username, request);
         if (result != null)

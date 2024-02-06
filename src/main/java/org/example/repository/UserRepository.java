@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 //todo unsure if needed, architecture gets ugly without it
+@Deprecated
 public interface UserRepository {
     Optional<User> get(String username);
 

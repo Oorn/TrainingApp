@@ -7,6 +7,9 @@ import org.example.domain_entities.TrainingPartnership;
 import org.example.repository.TraineeRepository;
 import org.example.repository.TrainerRepository;
 import org.example.repository.TrainingPartnershipRepository;
+import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
+import org.example.repository.impl.v2.hibernate.TrainerHibernateRepository;
+import org.example.repository.impl.v2.hibernate.TrainingPartnershipHibernateRepository;
 import org.example.requests_responses.trainer.TrainerShortInfoResponse;
 import org.example.requests_responses.trainingpartnership.AvailableTrainersResponse;
 import org.example.requests_responses.trainingpartnership.UpdateTrainingPartnershipListRequest;
@@ -34,13 +37,13 @@ import static org.mockito.Mockito.*;
 class TrainingPartnershipServiceImplTest {
 
     @Mock
-    private TrainerRepository trainerRepository;
+    private TrainerHibernateRepository trainerRepository;
 
     @Mock
-    private TraineeRepository traineeRepository;
+    private TraineeHibernateRepository traineeRepository;
 
     @Mock
-    private TrainingPartnershipRepository trainingPartnershipRepository;
+    private TrainingPartnershipHibernateRepository trainingPartnershipRepository;
 
     @Mock
     private ConversionService converter;
@@ -82,15 +85,15 @@ class TrainingPartnershipServiceImplTest {
                 .trainer(trPresent2)
                 .build();
 
-        when(traineeRepository.get(traineeName)).thenReturn(Optional.of(trainee));
-        when(trainingPartnershipRepository.getByTraineeName(traineeName)).thenReturn(List.of(trPart1, trPart2));
-        when(trainerRepository.getAll()).thenReturn(List.of(trPresent1, trPresent2, trAbsent1, trAbsent2));
+        when(traineeRepository.findTraineeByUsername(traineeName)).thenReturn(Optional.of(trainee));
+        when(trainingPartnershipRepository.findPartnershipByTraineeUsername(traineeName)).thenReturn(List.of(trPart1, trPart2));
+        when(trainerRepository.findAll()).thenReturn(List.of(trPresent1, trPresent2, trAbsent1, trAbsent2));
 
         AvailableTrainersResponse response = service.getNotAssignedTrainers(traineeName);
 
-        verify(traineeRepository, times(1)).get(traineeName);
-        verify(trainingPartnershipRepository, times(1)).getByTraineeName(traineeName);
-        verify(trainerRepository, times(1)).getAll();
+        verify(traineeRepository, times(1)).findTraineeByUsername(traineeName);
+        verify(trainingPartnershipRepository, times(1)).findPartnershipByTraineeUsername(traineeName);
+        verify(trainerRepository, times(1)).findAll();
         assert response.getTrainers().contains(trAbsent1res);
         assert response.getTrainers().contains(trAbsent2res);
         assertEquals(2, response.getTrainers().size());
@@ -100,14 +103,16 @@ class TrainingPartnershipServiceImplTest {
     void updateTraineeTrainerList() {
 
         String traineeName = "trainee";
-        Trainee trainee = mock(Trainee.class);
+        Trainee trainee = mock(Trainee.class, Answers.RETURNS_DEEP_STUBS);
+        when(trainee.getUser().isActive()).thenReturn(true);
 
         BiFunction<String, TrainerShortInfoResponse, Trainer> trainerMockFactory = (name, res) -> {
             Trainer trainer = mock(Trainer.class, Answers.RETURNS_DEEP_STUBS);
-            when(trainerRepository.get(name)).thenReturn(Optional.of(trainer));
+            when(trainerRepository.findTrainerByUsername(name)).thenReturn(Optional.of(trainer));
             when(converter.convert(trainer, TrainerShortInfoResponse.class)).thenReturn(res);
             when(trainer.isRemoved()).thenReturn(false);
             when(trainer.getUser().isActive()).thenReturn(true);
+            when(trainer.getUser().getUserName()).thenReturn(name);
             return trainer;
         };
         BiFunction<Trainee, Trainer, TrainingPartnership> partnershipFactory = (traineeParam, trainerParam) -> TrainingPartnership.builder()
@@ -116,31 +121,38 @@ class TrainingPartnershipServiceImplTest {
                 .isRemoved(false)
                 .build();
 
-        TrainerShortInfoResponse trPresent1res = new TrainerShortInfoResponse()
-                , trPresent2res = new TrainerShortInfoResponse();
-        String trPresent1Name = "trainer1", trPresent2Name = "trainer2";
-        Trainer trPresent1 = trainerMockFactory.apply(trPresent1Name, trPresent1res)
-                , trPresent2 = trainerMockFactory.apply(trPresent2Name, trPresent2res);
-        TrainingPartnership trPart1 = partnershipFactory.apply(trainee, trPresent1)
-                , trPart2 = partnershipFactory.apply(trainee, trPresent2);
+        TrainerShortInfoResponse trPresentPresentRes = new TrainerShortInfoResponse()
+                , trPresentAbsentRes = new TrainerShortInfoResponse()
+                , trAbsentPresentRes = new TrainerShortInfoResponse();
+        final String trPresentPresentName = "trainer1", trPresentAbsentName = "trainer2", trAbsentPresentName = "trainer3";
+        Trainer trPresentPresent = trainerMockFactory.apply(trPresentPresentName, trPresentPresentRes)
+                , trPresentAbsent = trainerMockFactory.apply(trPresentAbsentName, trPresentAbsentRes)
+                , trAbsentPresent = trainerMockFactory.apply(trAbsentPresentName, trAbsentPresentRes);
+        TrainingPartnership trPartPresentPresent = partnershipFactory.apply(trainee, trPresentPresent)
+                , trPartPresentAbsent = partnershipFactory.apply(trainee, trPresentAbsent);
 
-        when(traineeRepository.get(traineeName)).thenReturn(Optional.of(trainee));
-        when(trainingPartnershipRepository.updateAndReturnListForTrainee(eq(traineeName), any())).thenReturn(List.of(trPart1, trPart2));
-
+        when(traineeRepository.findTraineeByUsername(traineeName)).thenReturn(Optional.of(trainee));
+        when(trainingPartnershipRepository.findPartnershipByTraineeUsername(traineeName)).thenReturn(List.of(trPartPresentPresent, trPartPresentAbsent));
 
         UpdateTrainingPartnershipListRequest request = new UpdateTrainingPartnershipListRequest();
-        request.setTrainerUsernames(List.of(trPresent1Name, trPresent2Name));
+        request.setTrainerUsernames(List.of(trPresentPresentName, trAbsentPresentName));
         UpdateTrainingPartnershipListResponse response = service.updateTraineeTrainerList(traineeName, request);
 
-        verify(traineeRepository, times(1)).get(traineeName);
-        verify(trainingPartnershipRepository, times(1)).updateAndReturnListForTrainee(eq(traineeName), argThat((list) -> {
-            assert list.contains(trPresent1);
-            assert list.contains(trPresent2);
-            assertEquals(2, list.size());
+        verify(traineeRepository, times(1)).findTraineeByUsername(traineeName);
+        verify(trainingPartnershipRepository, times(2)).findPartnershipByTraineeUsername(traineeName);
+        verify(trainingPartnershipRepository, times(2)).saveAndFlush(argThat((trp) -> {
+            switch (trp.getTrainer().getUser().getUserName()) {
+                case trPresentPresentName:
+                case trAbsentPresentName:
+                    assertFalse(trp.isRemoved());
+                    break;
+                case trPresentAbsentName:
+                    assertTrue(trp.isRemoved());
+                    break;
+                default:
+                    return false;
+            }
             return true;
         }));
-        assert response.getTrainersList().contains(trPresent1res);
-        assert response.getTrainersList().contains(trPresent2res);
-        assertEquals(2, response.getTrainersList().size());
     }
 }

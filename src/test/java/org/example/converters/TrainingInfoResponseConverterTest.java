@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -35,8 +36,8 @@ class TrainingInfoResponseConverterTest {
         Mockito.when(trainer.getSpecialization().getTrainingType()).thenReturn(type);
 
         Training training = Training.builder()
-                .trainingDateFrom(dateFrom)
-                .trainingDateTo(dateTo)
+                .trainingDateFrom(Timestamp.from(dateFrom))
+                .trainingDateTo(Timestamp.from(dateTo))
                 .trainingName(trainingName)
                 .trainingPartnership(TrainingPartnership.builder()
                         .trainer(trainer)
@@ -47,7 +48,7 @@ class TrainingInfoResponseConverterTest {
         TrainingInfoResponse response = converter.convert(training);
 
         assert response != null;
-        assertEquals(dateFrom, response.getDate());
+        assertEquals(dateFrom, response.getDate().toInstant());
         assertEquals(duration, response.getDuration());
         assertEquals(trainingName, response.getName());
         assertEquals(type, response.getType());

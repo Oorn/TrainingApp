@@ -5,6 +5,7 @@ import org.example.domain_entities.TrainingType;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface TrainingTypeRepository {
     Optional<TrainingType> get(String name);
     List<TrainingType> getAll();

@@ -5,6 +5,7 @@ import org.example.domain_entities.Trainer;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface TrainerRepository {
     Optional<Trainer> get(String username);
     List<Trainer> getAll();

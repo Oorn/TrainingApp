@@ -5,6 +5,7 @@ import org.example.domain_entities.Trainee;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
 import org.example.repository.TraineeRepository;
+import org.example.repository.impl.v2.hibernate.TraineeHibernateRepository;
 import org.example.requests_responses.trainee.CreateTraineeRequest;
 import org.example.requests_responses.trainee.TraineeFullInfoResponse;
 import org.example.requests_responses.trainee.UpdateTraineeProfileRequest;
@@ -28,8 +29,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Setter(onMethod_={@Autowired})
     private CredentialsService credentialsService;
 
-    @Setter(onMethod_={@Autowired})
-    private TraineeRepository traineeRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private TraineeRepository traineeRepository;
+    @Autowired
+    private TraineeHibernateRepository traineeHibernateRepository;
 
     @Setter(onMethod_={@Autowired})
     private ConversionService converter;
@@ -44,7 +47,7 @@ public class TraineeServiceImpl implements TraineeService {
         newTrainee.getUser().setUserName(username);
         credentialsServiceUtils.setUserPassword(newTrainee.getUser(),password);
 
-        traineeRepository.save(newTrainee);
+        traineeHibernateRepository.saveAndFlush(newTrainee);
 
         return CredentialsResponse.builder()
                 .username(username)
@@ -54,7 +57,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public TraineeFullInfoResponse get(String username) {
-        Trainee trainee = traineeRepository.get(username).orElse(null);
+        Trainee trainee = traineeHibernateRepository.findTraineeByUsername(username).orElse(null);
         if (trainee == null)
             throw new NoSuchEntityException("trainee not found");
         if (trainee.isRemoved())
@@ -64,7 +67,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public TraineeFullInfoResponse update(String authUsername, UpdateTraineeProfileRequest request) {
-        Trainee trainee = traineeRepository.get(authUsername).orElse(null);
+        Trainee trainee = traineeHibernateRepository.findTraineeByUsername(authUsername).orElse(null);
         if (trainee == null)
             throw new NoSuchEntityException("trainee not found");
         if (trainee.isRemoved())
@@ -78,14 +81,14 @@ public class TraineeServiceImpl implements TraineeService {
         if (request.isActive())
             trainee.getTrainingPartnerships().forEach(tp->tp.setRemoved(true)); //automatically remove partnerships of inactive users (but not trainings)
 
-        traineeRepository.save(trainee);
+        traineeHibernateRepository.saveAndFlush(trainee);
 
         return converter.convert(trainee, TraineeFullInfoResponse.class);
     }
 
     @Override
     public boolean delete(String username) {
-        Trainee trainee = traineeRepository.get(username).orElse(null);
+        Trainee trainee = traineeHibernateRepository.findTraineeByUsername(username).orElse(null);
         if (trainee == null)
             throw new NoSuchEntityException("trainee not found");
         trainee.setRemoved(true);
@@ -95,7 +98,7 @@ public class TraineeServiceImpl implements TraineeService {
                 flatMap(t->t.getTrainings().stream()).
                 forEach(t->t.setRemoved(true));
 
-        traineeRepository.save(trainee);
+        traineeHibernateRepository.saveAndFlush(trainee);
         return true;
     }
 }

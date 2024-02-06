@@ -3,6 +3,7 @@ package org.example.domain_entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
@@ -28,10 +29,10 @@ public class Training {
     private String trainingName;
 
     @Column(name = "timestamp_from")
-    private Instant trainingDateFrom;
+    private Timestamp trainingDateFrom;
 
     @Column(name = "timestamp_to")
-    private Instant trainingDateTo;
+    private Timestamp trainingDateTo;
 
     @Column(name = "is_removed")
     private boolean isRemoved;

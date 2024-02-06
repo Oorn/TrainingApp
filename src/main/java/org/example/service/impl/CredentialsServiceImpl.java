@@ -6,6 +6,7 @@ import org.example.exceptions.IllegalStateException;
 import org.example.exceptions.NoPermissionException;
 import org.example.exceptions.RemovedEntityException;
 import org.example.repository.UserRepository;
+import org.example.repository.impl.v2.hibernate.UserHibernateRepository;
 import org.example.requests_responses.user.UpdateCredentialsRequest;
 import org.example.service.CredentialsService;
 import org.example.service.CredentialsServiceUtils;
@@ -23,12 +24,15 @@ public class CredentialsServiceImpl implements CredentialsService {
     @Setter(onMethod_={@Autowired})
     private CredentialsServiceUtils credentialsServiceUtils;
 
-    @Setter(onMethod_={@Autowired})
-    private UserRepository userRepository;
+    //@Setter(onMethod_={@Autowired})
+    //private UserRepository userRepository;
+
+    @Autowired
+    private UserHibernateRepository userHibernateRepository;
 
     @Override
     public boolean validateUsernamePassword(String username, String password) {
-        Optional<User> optionalUser = userRepository.get(username);
+        Optional<User> optionalUser = userHibernateRepository.findUserByUserName(username);
         if (optionalUser.isEmpty())
             throw new NoPermissionException("credentials don't match"); //no user with such username found
         if (optionalUser.get().isRemoved())
@@ -47,11 +51,11 @@ public class CredentialsServiceImpl implements CredentialsService {
             throw new IllegalStateException("error - new password rejected for unknown reason");
         //checks passed, may update password
 
-        User user = userRepository.get(authUsername).orElseThrow(()->new NoPermissionException("old credentials don't match"));
+        User user = userHibernateRepository.findUserByUserName(authUsername).orElseThrow(()->new NoPermissionException("old credentials don't match"));
         if (user.isRemoved())
             throw new RemovedEntityException("user has been removed");
         credentialsServiceUtils.setUserPassword(user, request.getNewPassword());
-        userRepository.save(user);
+        userHibernateRepository.saveAndFlush(user);
         return true;
     }
 
@@ -60,7 +64,7 @@ public class CredentialsServiceImpl implements CredentialsService {
         String defaultUsername = firstName + "." + lastName;
         defaultUsername = defaultUsername.replaceAll("[^A-Za-z0-9_.\\-~]", ""); //remove everything that might mess with web path
         String defaultUsernameRegex = Pattern.quote(defaultUsername); //to avoid sneaky injections
-        List<User> matchingUsers = userRepository.getAllByPrefix(defaultUsername);
+        List<User> matchingUsers = userHibernateRepository.findUsersByUserNameIsStartingWith(defaultUsername);
         if (matchingUsers.isEmpty())
             return defaultUsername; //no users with matching prefix, can use default
         List<String> matchingUsernamePostfixes = matchingUsers

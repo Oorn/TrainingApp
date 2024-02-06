@@ -3,6 +3,7 @@ package org.example.domain_entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class Trainee {
     private  long id;
 
     @Column(name = "date_of_birth")
-    private Instant dateOfBirth;
+    private Timestamp dateOfBirth;
 
     @Column(name = "address")
     private String address;

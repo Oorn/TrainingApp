@@ -19,7 +19,7 @@ public class TrainingInfoResponseConverter implements Converter<Training, Traini
                 .name(source.getTrainingName())
                 .type(source.getTrainingPartnership().getTrainer().getSpecialization().getTrainingType())
                 .date(source.getTrainingDateFrom())
-                .duration(Duration.between(source.getTrainingDateFrom(), source.getTrainingDateTo()))
+                .duration(Duration.between(source.getTrainingDateFrom().toInstant(), source.getTrainingDateTo().toInstant()))
                 .build();
     }
 }

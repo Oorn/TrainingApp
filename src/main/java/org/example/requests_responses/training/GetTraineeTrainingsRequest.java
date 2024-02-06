@@ -3,6 +3,7 @@ package org.example.requests_responses.training;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
@@ -19,9 +20,9 @@ public class GetTraineeTrainingsRequest {
 
     private String type;
 
-    @Schema(defaultValue = "2018-11-30T18:35:24.00Z")
-    private Instant dateFrom;
+    @Schema(defaultValue = "2023-05-01 15:23:45")
+    private Timestamp dateFrom;
 
-    @Schema(defaultValue = "2018-11-30T18:35:24.00Z")
-    private Instant dateTo;
+    @Schema(defaultValue = "2023-05-01 15:23:45")
+    private Timestamp dateTo;
 }

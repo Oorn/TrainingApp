@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 @Primary
+@Deprecated
 public class TrainingRepositoryMiddle implements TrainingRepository {
     @Setter(onMethod_={@Autowired})
     private TrainingHibernateRepository hibernateTraining;
@@ -26,10 +27,6 @@ public class TrainingRepositoryMiddle implements TrainingRepository {
 
     @Override
     public List<Training> getTrainingsByFilter(TrainingSearchFilter searchFilter) {
-        return hibernateTraining.findTrainingByFilter(searchFilter.getTraineeName(),
-                searchFilter.getTrainerName(),
-                searchFilter.getTrainingType(),
-                Timestamp.from(searchFilter.getDateFrom()),
-                Timestamp.from(searchFilter.getDateTo()));
+        return hibernateTraining.findTrainingByFilter(searchFilter);
     }
 }

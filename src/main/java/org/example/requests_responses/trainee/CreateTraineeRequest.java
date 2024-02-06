@@ -3,6 +3,7 @@ package org.example.requests_responses.trainee;
 import lombok.*;
 import org.example.requests_responses.trainer.CreateTrainerRequest;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class CreateTraineeRequest {
 
     private String lastName;
 
-    private Instant dateOfBirth;
+    private Timestamp dateOfBirth;
 
     private String address;
 
@@ -25,7 +26,7 @@ public class CreateTraineeRequest {
     public CreateTraineeRequest(String firstName, String lastName, String dateOfBirth, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.dateOfBirth = Instant.parse(dateOfBirth);
+        this.dateOfBirth = Timestamp.from(Instant.parse(dateOfBirth));
         this.address = address;
     }
 }
