@@ -14,6 +14,7 @@ import org.example.requests_responses.training.MultipleTrainingInfoResponse;
 import org.example.security.JWTPropertiesConfig;
 import org.example.service.MentorService;
 import org.example.service.TrainingService;
+import org.example.validation.ValidationConstants;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/mentor/{username}")
@@ -39,7 +42,9 @@ public class MentorController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> getMentor(@PathVariable(name = "username") String username){
+    public ResponseEntity<Object> getMentor(@PathVariable(name = "username")
+                                            @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                            String username){
         MentorFullInfoResponse result = mentorService.get(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -54,8 +59,10 @@ public class MentorController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     @Transactional
-    public ResponseEntity<Object> updateMentor(@RequestBody UpdateMentorProfileRequest request,
-                                               @PathVariable(name = "username") String username) {
+    public ResponseEntity<Object> updateMentor(@RequestBody @Valid UpdateMentorProfileRequest request,
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username) {
         MentorFullInfoResponse result = mentorService.update(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -69,8 +76,10 @@ public class MentorController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> getTrainings(@ParameterObject GetMentorTrainingsRequest request,
-                                               @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> getTrainings(@ParameterObject @Valid GetMentorTrainingsRequest request,
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username){
         MultipleTrainingInfoResponse result = trainingService.getByMentor(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);

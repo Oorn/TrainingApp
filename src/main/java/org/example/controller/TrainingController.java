@@ -11,6 +11,7 @@ import org.example.requests_responses.training.CreateTrainingForStudentRequest;
 import org.example.requests_responses.training.CreateTrainingForMentorRequest;
 import org.example.security.JWTPropertiesConfig;
 import org.example.service.TrainingService;
+import org.example.validation.ValidationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 @RestController
 public class TrainingController {
@@ -33,8 +36,10 @@ public class TrainingController {
     })
     @Tag(name = "student")
     @Transactional
-    public ResponseEntity<Object> createStudentTraining(@RequestBody CreateTrainingForStudentRequest request,
-                                                        @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> createStudentTraining(@RequestBody @Valid CreateTrainingForStudentRequest request,
+                                                        @PathVariable(name = "username")
+                                                        @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                        String username){
 
         if (trainingService.create(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
@@ -49,8 +54,10 @@ public class TrainingController {
     })
     @Tag(name = "mentor")
     @Transactional
-    public ResponseEntity<Object> createMentorTraining(@RequestBody CreateTrainingForMentorRequest request,
-                                                       @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> createMentorTraining(@RequestBody @Valid CreateTrainingForMentorRequest request,
+                                                       @PathVariable(name = "username")
+                                                       @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                       String username){
         if (trainingService.create(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - training creation rejected for unspecified reason");

@@ -18,6 +18,7 @@ import org.example.security.JWTPropertiesConfig;
 import org.example.service.StudentService;
 import org.example.service.PartnershipService;
 import org.example.service.TrainingService;
+import org.example.validation.ValidationConstants;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/student/{username}")
@@ -47,7 +50,9 @@ public class StudentController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> getStudent(@PathVariable(name = "username") String username){
+    public ResponseEntity<Object> getStudent(@PathVariable(name = "username")
+                                             @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                             String username){
         StudentFullInfoResponse result = studentService.get(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -62,8 +67,10 @@ public class StudentController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     @Transactional
-    public ResponseEntity<Object> updateStudent(@RequestBody UpdateStudentProfileRequest request,
-                                                @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updateStudent(@RequestBody @Valid UpdateStudentProfileRequest request,
+                                                @PathVariable(name = "username")
+                                                @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                String username){
         StudentFullInfoResponse result = studentService.update(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -78,7 +85,9 @@ public class StudentController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     @Transactional
-    public ResponseEntity<Object> deleteStudent(@PathVariable(name = "username") String username){
+    public ResponseEntity<Object> deleteStudent(@PathVariable(name = "username")
+                                                @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                String username){
         if (studentService.delete(username))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - delete rejected for unspecified reason");
@@ -91,7 +100,9 @@ public class StudentController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> getFreeMentors(@PathVariable(name = "username") String username){
+    public ResponseEntity<Object> getFreeMentors(@PathVariable(name = "username")
+                                                 @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                 String username){
         AvailableTrainersResponse result = partnershipService.getNotAssignedMentors(username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -106,8 +117,10 @@ public class StudentController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     @Transactional
-    public ResponseEntity<Object> updatePartnerships(@RequestBody UpdateTrainingPartnershipListRequest request,
-                                                     @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updatePartnerships(@RequestBody @Valid UpdateTrainingPartnershipListRequest request,
+                                                     @PathVariable(name = "username")
+                                                     @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                     String username){
         UpdateTrainingPartnershipListResponse result = partnershipService.updateStudentMentorsList(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -121,8 +134,10 @@ public class StudentController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> getTrainings(@ParameterObject GetStudentTrainingsRequest request,
-                                               @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> getTrainings(@ParameterObject @Valid GetStudentTrainingsRequest request,
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username){
         MultipleTrainingInfoResponse result = trainingService.getByStudent(username, request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);

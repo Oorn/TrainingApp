@@ -17,6 +17,7 @@ import org.example.security.JWTUtils;
 import org.example.service.CredentialsService;
 import org.example.service.StudentService;
 import org.example.service.MentorService;
+import org.example.validation.ValidationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ import org.springframework.web.bind.annotation.*;
 import org.example.exceptions.IllegalStateException;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @RestController
 public class CredentialsController {
@@ -47,7 +51,7 @@ public class CredentialsController {
     @Operation(summary = "register new student")
     @Tag(name = "student")
     @Transactional
-    public ResponseEntity<Object> createStudent(@RequestBody CreateStudentRequest request){
+    public ResponseEntity<Object> createStudent(@RequestBody @Valid CreateStudentRequest request){
         CredentialsResponse result = studentService.create(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -58,7 +62,7 @@ public class CredentialsController {
     @Operation(summary = "register new mentor")
     @Tag(name = "mentor")
     @Transactional
-    public ResponseEntity<Object> createMentor(@RequestBody CreateMentorRequest request){
+    public ResponseEntity<Object> createMentor(@RequestBody @Valid CreateMentorRequest request){
         CredentialsResponse result = mentorService.create(request);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -81,8 +85,12 @@ public class CredentialsController {
     @PostMapping("/student/{username}/login")
     @Operation(summary = "login")
     @Tag(name = "student")
-    public ResponseEntity<Object> loginTrainee(@RequestBody String password,
-                                               @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> loginTrainee(@NotBlank @Size(min = ValidationConstants.MIN_PASSWORD_LENGTH, max = ValidationConstants.MAX_PASSWORD_LENGTH)
+                                               @RequestBody String password,
+
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username){
         if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
         if (studentService.get(username) == null)
@@ -94,8 +102,12 @@ public class CredentialsController {
     @PostMapping("/mentor/{username}/login")
     @Operation(summary = "login")
     @Tag(name = "mentor")
-    public ResponseEntity<Object> loginTrainer(@RequestBody String password,
-                                               @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> loginTrainer(@NotBlank @Size(min = ValidationConstants.MIN_PASSWORD_LENGTH, max = ValidationConstants.MAX_PASSWORD_LENGTH)
+                                               @RequestBody String password,
+
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username){
         if (!credentialsService.validateUsernamePassword(username, password))
             throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
         if (mentorService.get(username) == null)
@@ -114,8 +126,10 @@ public class CredentialsController {
     })
     @Tag(name = "student")
     @Transactional
-    public ResponseEntity<Object> updateStudentPassword(@RequestBody UpdateCredentialsRequest request,
-                                                        @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updateStudentPassword(@RequestBody @Valid UpdateCredentialsRequest request,
+                                                        @PathVariable(name = "username")
+                                                        @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                        String username){
         if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
@@ -130,8 +144,10 @@ public class CredentialsController {
     })
     @Tag(name = "mentor")
     @Transactional
-    public ResponseEntity<Object> updateMentorPassword(@RequestBody UpdateCredentialsRequest request,
-                                                       @PathVariable(name = "username") String username){
+    public ResponseEntity<Object> updateMentorPassword(@RequestBody @Valid UpdateCredentialsRequest request,
+                                                       @PathVariable(name = "username")
+                                                       @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                                       String username){
         if (credentialsService.updateCredentials(username, request))
             return new ResponseEntity<>(HttpStatus.OK);
         throw new IllegalStateException("error - credentials rejected for unspecified reason"); //service should have thrown another exception by now
