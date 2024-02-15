@@ -22,3 +22,8 @@ logging:
 jwt:
   secret: 6013fba8-50ec-4830-a6b6-1c2b7ef27b3a
   expiration: 3600000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]
