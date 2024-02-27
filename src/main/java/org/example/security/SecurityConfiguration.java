@@ -43,7 +43,8 @@ public class SecurityConfiguration{
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/ping/**", "/specialisations", "/mentor", "/student", "/student/{username}/login", "/mentor/{username}/login" ).permitAll()
                 .antMatchers("/mentor/**", "/student/**").authenticated()
-                .antMatchers("/actuator/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('::1')")
+                //.antMatchers("/actuator/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('::1')")
+                .antMatchers("/actuator/**").permitAll()
                 .anyRequest()
                 .denyAll();
 
