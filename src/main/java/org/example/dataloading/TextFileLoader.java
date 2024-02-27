@@ -78,22 +78,22 @@ public class TextFileLoader {
             if (argCount == 0)
                 return;
             switch (tokens[0]) {
-                case "register-trainee":
+                case "register-student":
                     if (argCount != 5)
                         throw new Exception("incorrect parameter count. Command format: register-trainee String(firstname) String(lastname) Instant(dateOfBirth) String(address)");
                     credentialsController.createStudent(new CreateStudentRequest(tokens[1], tokens[2], tokens[3], tokens[4]));
                     break;
-                case "register-trainer":
+                case "register-mentor":
                     if (argCount != 4)
                         throw new Exception("incorrect parameter count. Command format: register-trainer String(firstname) String(lastname) String(trainingType)");
                     credentialsController.createMentor(new CreateMentorRequest(tokens[1], tokens[2], tokens[3]));
                     break;
-                case "update-trainee":
+                case "update-student":
                     if (argCount != 7)
                         throw new Exception("incorrect parameter count. Command format: update-trainee String(username) String(new firstname) String(new lastname) Instant(new dateOfBirth) String(new address) boolean(new isActive)");
                     studentController.updateStudent(new UpdateStudentProfileRequest(tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]), tokens[1]);
                     break;
-                case "update-trainer":
+                case "update-mentor":
                     if (argCount != 5)
                         throw new Exception("incorrect parameter count. Command format: update-trainer String(username) String(new firstname) String(new lastname) boolean(new isActive)");
                     mentorController.updateMentor(new UpdateMentorProfileRequest(tokens[2], tokens[3], tokens[4]), tokens[1]);

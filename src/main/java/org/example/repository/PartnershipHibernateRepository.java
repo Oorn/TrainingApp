@@ -28,6 +28,6 @@ public interface PartnershipHibernateRepository extends JpaRepository<Partnershi
             " left join fetch m.user mu" +
             " left join fetch p.student s" +
             " left join fetch s.user su" +
-            " where su.userName = :trainerName and mu.userName = :traineeName")
+            " where su.userName = :traineeName and mu.userName = :trainerName")
     Optional<Partnership> findPartnershipByTraineeTrainerUsernames(String traineeName, String trainerName);
 }
