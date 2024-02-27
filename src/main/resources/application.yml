@@ -37,3 +37,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/training_app_dev
     username: postgres
     password: postgres
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/training_app_prod
+    username: postgres
+    password: postgres
