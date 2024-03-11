@@ -29,6 +29,7 @@ import javax.validation.constraints.Size;
 @RestController
 @RequestMapping("/mentor/{username}")
 @Tag(name = "mentor")
+@CrossOrigin
 public class MentorController {
     @Setter(onMethod_={@Autowired})
     private MentorService mentorService;

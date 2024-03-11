@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ping")
+@CrossOrigin
 public class PingController {
     @GetMapping
     @Operation(summary = "simple ping")

@@ -34,6 +34,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @RestController
+@CrossOrigin
 public class CredentialsController {
 
     @Setter(onMethod_={@Autowired})

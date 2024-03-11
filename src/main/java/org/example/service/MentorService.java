@@ -9,4 +9,6 @@ public interface MentorService {
     CredentialsResponse create(CreateMentorRequest request);
     MentorFullInfoResponse get(String username);
     MentorFullInfoResponse update(String authUsername, UpdateMentorProfileRequest request);
+
+    boolean isMentor(String username);
 }

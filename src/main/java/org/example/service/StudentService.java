@@ -11,4 +11,6 @@ public interface StudentService {
     StudentFullInfoResponse update(String authUsername, UpdateStudentProfileRequest request);
     boolean delete(String username);
 
+    boolean isStudent(String username);
+
 }

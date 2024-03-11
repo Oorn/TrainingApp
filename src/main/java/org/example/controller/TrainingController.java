@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 @RestController
+@CrossOrigin
 public class TrainingController {
     @Setter(onMethod_={@Autowired})
     private TrainingService trainingService;

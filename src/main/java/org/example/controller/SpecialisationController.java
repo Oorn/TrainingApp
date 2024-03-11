@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/specialisations")
+@CrossOrigin
 public class SpecialisationController {
     @Setter(onMethod_={@Autowired})
     private SpecialisationService specialisationService;

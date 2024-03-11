@@ -100,4 +100,12 @@ public class StudentServiceImpl implements StudentService {
         studentHibernateRepository.saveAndFlush(student);
         return true;
     }
+
+    @Override
+    public boolean isStudent(String username) {
+        Student student = studentHibernateRepository.findStudentByUsername(username).orElse(null);
+        if (student == null)
+            return false;
+        return !student.isRemoved();
+    }
 }

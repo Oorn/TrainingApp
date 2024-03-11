@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Content Page</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${username}"></span>!</h1>
+<p>Here is your token with authorities <span th:text="${authority}"></span>:</p>
+<p th:text="${content}"></p>
+<form method="get" action="content">
+    <input type="submit" value="Request Content">
+</form>
+<div>
+    <form th:action="@{/logout}" method="post"><button type="submit" class="btn btn-primary">Logout</button></form>
+</div>
+</body>
+</html>

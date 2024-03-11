@@ -78,4 +78,12 @@ public class MentorServiceImpl implements MentorService {
 
         return converter.convert(mentor, MentorFullInfoResponse.class);
     }
+
+    @Override
+    public boolean isMentor(String username) {
+        Mentor mentor = mentorHibernateRepository.findMentorByUsername(username).orElse(null);
+        if (mentor == null)
+            return false;
+        return !mentor.isRemoved();
+    }
 }

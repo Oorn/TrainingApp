@@ -33,6 +33,7 @@ import javax.validation.constraints.Size;
 @RestController
 @RequestMapping("/student/{username}")
 @Tag(name = "student")
+@CrossOrigin
 public class StudentController {
     @Setter(onMethod_={@Autowired})
     private StudentService studentService;
