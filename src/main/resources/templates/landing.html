@@ -10,7 +10,7 @@
         <form th:action="@{/UI-login/content}" method="get"><button type="submit" class="btn btn-primary">Get JWT</button></form>
     </div>
     <div sec:authorize="isAuthenticated()">
-        <form th:action="@{/logout}" method="post"><button type="submit" class="btn btn-primary">Logout</button></form>
+        <form th:action="@{/UI-login/logout}" method="post"><button type="submit" class="btn btn-primary">Logout</button></form>
     </div>
     <div sec:authorize="isAnonymous()">
         <form th:action="@{/UI-login/login}" method="get"><button type="submit" class="btn btn-primary">Login</button></form>

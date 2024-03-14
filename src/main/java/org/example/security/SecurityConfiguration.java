@@ -8,6 +8,8 @@ import org.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -57,32 +59,53 @@ public class SecurityConfiguration{
     @Setter(onMethod_={@Autowired})
     private BruteForceProtectionService protectionService;
 
+    @Order(Ordered.HIGHEST_PRECEDENCE + 2)
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .cors()
                 .and()
                 .exceptionHandling()
-                //.authenticationEntryPoint(
-                //        (request, response, ex) -> response.sendError(
-                //                HttpServletResponse.SC_UNAUTHORIZED,
-                //                ex.getMessage()
-                //        )
-                //)
-                //.and()
-                //.sessionManagement()
-                //.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .authenticationEntryPoint(
+                        (request, response, ex) -> response.sendError(
+                                HttpServletResponse.SC_UNAUTHORIZED,
+                                ex.getMessage()
+                        )
+                )
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 //ant matchers
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/ping/**", "/specialisations", "/mentor", "/student", "/student/{username}/login", "/mentor/{username}/login", "/UI-login*", "/UI-login/login*" ).permitAll()
-                .antMatchers("/mentor/**", "/student/**", "/UI-login/content*").authenticated()
-                //.antMatchers("/actuator/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('::1')")
+                .antMatchers("/ping/**", "/specialisations", "/mentor", "/student", "/student/{username}/login", "/mentor/{username}/login").permitAll()
+                .antMatchers("/mentor/**", "/student/**").authenticated()
                 .antMatchers("/actuator/**").permitAll()
+                .anyRequest()
+                .denyAll();
+
+        http.addFilterBefore(authFilterWrapper.getAuthFilter(), BasicAuthenticationFilter.class);
+        return http.build();
+
+    }
+
+    @Order(Ordered.HIGHEST_PRECEDENCE + 1)
+    @Bean
+    public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
+        http
+                .antMatcher("/UI-login/**")
+                .csrf()
+                .disable()
+                .cors()
+                .and()
+                .authorizeRequests()
+                //ant matchers
+                .antMatchers("/UI-login*", "/UI-login/login*" ).permitAll()
+                .antMatchers("/UI-login/content*").authenticated()
                 .anyRequest()
                 .denyAll()
                 .and()
@@ -96,14 +119,14 @@ public class SecurityConfiguration{
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .logoutSuccessUrl("/UI-login")
+                .logoutUrl("/UI-login/logout")
                 .permitAll();
 
-
-
-        http.addFilterBefore(authFilterWrapper.getAuthFilter(), BasicAuthenticationFilter.class);
         return http.build();
 
     }
+
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(new AuthenticationProvider() {
