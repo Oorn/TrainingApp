@@ -124,7 +124,7 @@ public class SecurityConfiguration{
             String password = authentication.getCredentials().toString();
             if (!protectionService.verifyLoginAccess(name)) {
                 protectionService.registerLoginFailure(name);
-                throw new BadCredentialsException("password doesn't match");
+                throw new BadCredentialsException("user has been temporarily blocked");
             }
             try {
                 if (credentialsService.validateUsernamePassword(name, password)) {
