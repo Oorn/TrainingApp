@@ -11,11 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,20 +19,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -120,54 +109,44 @@ public class SecurityConfiguration{
                 .invalidateHttpSession(true)
                 .logoutSuccessUrl("/UI-login")
                 .logoutUrl("/UI-login/logout")
-                .permitAll();
+                .permitAll()
+                .and()
+                .authenticationManager(getUIAuthManager());
 
         return http.build();
 
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new AuthenticationProvider() {
-                    @Override
-                    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
-                        String name = authentication.getName();
-                        String password = authentication.getCredentials().toString();
-                        if (!protectionService.verifyLoginAccess(name)) {
-                            protectionService.registerLoginFailure(name);
-                            return null;
-                        }
-                        try {
-                            if (credentialsService.validateUsernamePassword(name, password)) {
-                                List<GrantedAuthority> grantedAuths = new ArrayList<>();
-                                try {
-                                    if (studentService.isStudent(name))
-                                        grantedAuths.add(new SimpleGrantedAuthority("Student"));
-                                }
-                                catch (Exception ignored){}
-                                try {
-                                    if (mentorService.isMentor(name))
-                                        grantedAuths.add(new SimpleGrantedAuthority("Mentor"));
-                                }
-                                catch (Exception ignored){}
-                                final UserDetails principal = new User(name, password, grantedAuths);
-                                return new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
-                            }
-                        }
-                        catch (Exception ignored){}
-                        protectionService.registerLoginFailure(name);
-                        return null;
+    private AuthenticationManager getUIAuthManager() {
+        return authentication -> {
+            String name = authentication.getName();
+            String password = authentication.getCredentials().toString();
+            if (!protectionService.verifyLoginAccess(name)) {
+                protectionService.registerLoginFailure(name);
+                throw new BadCredentialsException("password doesn't match");
+            }
+            try {
+                if (credentialsService.validateUsernamePassword(name, password)) {
+                    List<GrantedAuthority> grantedAuths = new ArrayList<>();
+                    try {
+                        if (studentService.isStudent(name))
+                            grantedAuths.add(new SimpleGrantedAuthority("Student"));
                     }
-
-                    @Override
-                    public boolean supports(Class<?> authentication) {
-                        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+                    catch (Exception ignored){}
+                    try {
+                        if (mentorService.isMentor(name))
+                            grantedAuths.add(new SimpleGrantedAuthority("Mentor"));
                     }
-                });
+                    catch (Exception ignored){}
+                    final UserDetails principal = new User(name, password, grantedAuths);
+                    return new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+                }
+            }
+            catch (Exception ignored){}
+            protectionService.registerLoginFailure(name);
+            throw new BadCredentialsException("password doesn't match");
+        };
     }
-
-
 
 }
