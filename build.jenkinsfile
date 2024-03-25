@@ -20,7 +20,7 @@ pipeline {
              -Dsonar.projectKey=projectKey \
              -Dsonar.projectName=projectName \
              -Dsonar.sources=main-api/src/,pom.xml \
-             -Dsonar.java.binaries=main-api/target/classes/,target/classes/ \
+             -Dsonar.java.binaries=main-api/target/classes/ \
              -Dsonar.exclusions=main-api/src/test/java/****/*.java \
              -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar \
              -Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
