@@ -19,9 +19,9 @@ pipeline {
              sh '''$SCANNER_HOME/bin/sonar-scanner \
              -Dsonar.projectKey=projectKey \
              -Dsonar.projectName=projectName \
-             -Dsonar.sources=src/,pom.xml \
-             -Dsonar.java.binaries=target/classes/,target/classes/ \
-             -Dsonar.exclusions=src/test/java/****/*.java \
+             -Dsonar.sources=main-api/src/,pom.xml \
+             -Dsonar.java.binaries=main-api/target/classes/,target/classes/ \
+             -Dsonar.exclusions=main-api/src/test/java/****/*.java \
              -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar \
              -Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
            }
