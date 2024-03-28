@@ -58,14 +58,6 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <mainClass>org.example.SpringBootStarter</mainClass>
-                        <layout>JAR</layout>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

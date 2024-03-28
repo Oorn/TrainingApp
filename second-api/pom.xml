@@ -202,6 +202,16 @@
     </dependencyManagement>
     <build>
         <finalName>TrainingApp-second</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>org.example.SecondServiceMain</mainClass>
+                    <layout>JAR</layout>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
