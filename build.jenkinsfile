@@ -40,22 +40,10 @@ pipeline {
         }
     }
     stage('Deploy') {
-        parallel {
-            stage('Deploy eureka') {
-                        steps {
-                            build wait: false, job: 'deploy-eureka'
-                        }
-            }
-            stage('Deploy main') {
-                            steps {
-                                build wait: false, job: 'deploy'
-                            }
-                        }
-            stage('Deploy second') {
-                            steps {
-                                build wait: false, job: 'deploy-second'
-                            }
-                        }
+        steps {
+            build wait: false, job: 'deploy-eureka'
+            build wait: false, job: 'deploy'
+            build wait: false, job: 'deploy-second'
         }
     }
   }
