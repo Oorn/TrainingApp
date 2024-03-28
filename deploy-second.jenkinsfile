@@ -9,7 +9,7 @@ pipeline {
     stage('Run Jar') {
         steps {
             sh '''
-            java -jar ${WORKSPACE}/eureka/target/TrainingApp-second.jar
+            java -jar ${WORKSPACE}/second-api/target/TrainingApp-second.jar
             '''
         }
     }
