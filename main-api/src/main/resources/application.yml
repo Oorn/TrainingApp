@@ -14,6 +14,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/training_app
     username: postgres
     password: postgres
+  application:
+    name: main-api
 server:
   port: 8081
 logging:
@@ -28,6 +30,16 @@ management:
       exposure:
         include: [ "prometheus" ]
 
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+feign:
+  circuitbreaker:
+    enabled: true
 ---
 spring:
   config:

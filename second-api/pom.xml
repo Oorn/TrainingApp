@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>main-api</artifactId>
+    <artifactId>second-api</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -180,13 +180,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -203,7 +201,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>TrainingApp-main</finalName>
+        <finalName>TrainingApp-second</finalName>
     </build>
 
 </project>

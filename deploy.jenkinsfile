@@ -3,12 +3,14 @@ pipeline {
   stages {
     stage('Install Jar') {
         steps {
-            copyArtifacts filter: '**/TrainingApp.jar', projectName: 'build'
+            copyArtifacts filter: '**/*.jar', projectName: 'build'
         }
     }
     stage('Run Jar') {
         steps {
-            sh "java -jar ${WORKSPACE}/target/TrainingApp.jar"
+            sh "java -jar ${WORKSPACE}/target/TrainingApp-eureka.jar &\\
+            java -jar ${WORKSPACE}/target/TrainingApp-main.jar &\\
+            java -jar ${WORKSPACE}/target/TrainingApp-second.jar"
         }
     }
   }
