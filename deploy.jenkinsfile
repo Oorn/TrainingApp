@@ -8,9 +8,11 @@ pipeline {
     }
     stage('Run Jar') {
         steps {
-            sh "java -jar ${WORKSPACE}/target/TrainingApp-eureka.jar &\\
+            sh '''
+            java -jar ${WORKSPACE}/target/TrainingApp-eureka.jar &\\
             java -jar ${WORKSPACE}/target/TrainingApp-main.jar &\\
-            java -jar ${WORKSPACE}/target/TrainingApp-second.jar"
+            java -jar ${WORKSPACE}/target/TrainingApp-second.jar
+            '''
         }
     }
   }
