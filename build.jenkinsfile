@@ -41,7 +41,9 @@ pipeline {
     }
     stage('Deploy') {
         steps {
+            build wait: false, job: 'deploy-eureka'
             build wait: false, job: 'deploy'
+            build wait: false, job: 'deploy-second'
         }
     }
   }
