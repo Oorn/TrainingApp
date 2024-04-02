@@ -7,10 +7,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Setter;
+import org.example.openfeign.SecondMicroservice;
 import org.example.requests_responses.trainer.MentorFullInfoResponse;
 import org.example.requests_responses.trainer.UpdateMentorProfileRequest;
 import org.example.requests_responses.training.GetMentorTrainingsRequest;
 import org.example.requests_responses.training.MultipleTrainingInfoResponse;
+import org.example.requests_responses.training.TrainingDurationSummaryRequest;
+import org.example.requests_responses.training.TrainingDurationSummaryResponse;
 import org.example.security.JWTPropertiesConfig;
 import org.example.service.MentorService;
 import org.example.service.TrainingService;
@@ -35,6 +38,9 @@ public class MentorController {
     private MentorService mentorService;
     @Setter(onMethod_={@Autowired})
     private TrainingService trainingService;
+
+    @Autowired
+    SecondMicroservice secondMicroservice;
 
     @GetMapping
     @Operation(summary = "mentor info", parameters = {
@@ -82,6 +88,22 @@ public class MentorController {
                                                @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
                                                String username){
         MultipleTrainingInfoResponse result = trainingService.getByMentor(username, request);
+        if (result != null)
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        throw new IllegalStateException("error - service returned null");
+    }
+    @PostMapping("/read_training_summary")
+    @Operation(summary = "associated training duration summary", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> getTrainingSummary(@RequestBody @Valid TrainingDurationSummaryRequest request,
+                                               @PathVariable(name = "username")
+                                               @Size(max = ValidationConstants.MAX_USERNAME_LENGTH)
+                                               String username){
+        TrainingDurationSummaryResponse result = secondMicroservice.getTrainingSummary(request, username);
         if (result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         throw new IllegalStateException("error - service returned null");

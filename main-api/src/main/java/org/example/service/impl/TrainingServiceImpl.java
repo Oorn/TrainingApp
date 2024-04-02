@@ -5,6 +5,8 @@ import org.example.domain_entities.*;
 import org.example.exceptions.BadRequestException;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
+import org.example.openfeign.SecondMicroservice;
+import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
 import org.example.repository.dto.TrainingSearchFilter;
 import org.example.repository.StudentHibernateRepository;
 import org.example.repository.MentorHibernateRepository;
@@ -48,6 +50,9 @@ public class TrainingServiceImpl implements TrainingService {
     @Setter(onMethod_={@Autowired})
     private ConversionService converter;
 
+    @Autowired
+    SecondMicroservice secondMicroservice;
+
 
     @Override
     public boolean create(String authUsername, CreateTrainingForStudentRequest request) {
@@ -71,6 +76,15 @@ public class TrainingServiceImpl implements TrainingService {
                 .build();
 
         trainingHibernateRepository.saveAndFlush(training);
+        secondMicroservice.putTraining(SecondMicroservicePutTrainingRequest.builder()
+                        .action(SecondMicroservicePutTrainingRequest.ACTION_ADD)
+                        .duration(request.getDuration())
+                        .date(request.getDate())
+                        .username(partnership.getMentor().getUser().getUserName())
+                        .firstName(partnership.getMentor().getUser().getFirstName())
+                        .lastName(partnership.getMentor().getUser().getLastName())
+                        .isActive(partnership.getMentor().getUser().isActive())
+                .build());
         return true;
     }
     @Override
