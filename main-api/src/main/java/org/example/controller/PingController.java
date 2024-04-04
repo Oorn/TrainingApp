@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.example.openfeign.SecondMicroservice;
+import org.example.openfeign.SecondMicroserviceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class PingController {
 
     @Autowired
-    SecondMicroservice secondMicroservice;
+    SecondMicroserviceWrapper secondMicroservice;
 
     @GetMapping
     @Operation(summary = "simple ping")

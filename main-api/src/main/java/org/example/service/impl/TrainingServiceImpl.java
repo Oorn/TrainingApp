@@ -6,6 +6,7 @@ import org.example.exceptions.BadRequestException;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
 import org.example.openfeign.SecondMicroservice;
+import org.example.openfeign.SecondMicroserviceWrapper;
 import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
 import org.example.repository.dto.TrainingSearchFilter;
 import org.example.repository.StudentHibernateRepository;
@@ -51,7 +52,7 @@ public class TrainingServiceImpl implements TrainingService {
     private ConversionService converter;
 
     @Autowired
-    SecondMicroservice secondMicroservice;
+    SecondMicroserviceWrapper secondMicroservice;
 
 
     @Override

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Setter;
 import org.example.openfeign.SecondMicroservice;
+import org.example.openfeign.SecondMicroserviceWrapper;
 import org.example.requests_responses.trainer.MentorFullInfoResponse;
 import org.example.requests_responses.trainer.UpdateMentorProfileRequest;
 import org.example.requests_responses.training.GetMentorTrainingsRequest;
@@ -40,7 +41,7 @@ public class MentorController {
     private TrainingService trainingService;
 
     @Autowired
-    SecondMicroservice secondMicroservice;
+    SecondMicroserviceWrapper secondMicroservice;
 
     @GetMapping
     @Operation(summary = "mentor info", parameters = {
