@@ -1,8 +1,8 @@
 package org.example.controller;
 
-import org.example.requests_responses.SecondMicroservicePutTrainingRequest;
-import org.example.requests_responses.TrainingDurationSummaryRequest;
-import org.example.requests_responses.TrainingDurationSummaryResponse;
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.example.security.JWTUtils;
 import org.example.service.TrainingSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;

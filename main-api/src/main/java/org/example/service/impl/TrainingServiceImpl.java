@@ -5,9 +5,9 @@ import org.example.domain_entities.*;
 import org.example.exceptions.BadRequestException;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
-import org.example.openfeign.SecondMicroservice;
-import org.example.openfeign.SecondMicroserviceWrapper;
-import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.jms.SecondMicroserviceJmsService;
+import org.example.to_externalize.SecondMicroserviceWrapper;
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
 import org.example.repository.dto.TrainingSearchFilter;
 import org.example.repository.StudentHibernateRepository;
 import org.example.repository.MentorHibernateRepository;
@@ -54,6 +54,9 @@ public class TrainingServiceImpl implements TrainingService {
     @Autowired
     SecondMicroserviceWrapper secondMicroservice;
 
+    @Autowired
+    SecondMicroserviceJmsService secondMicroserviceJmsService;
+
 
     @Override
     public boolean create(String authUsername, CreateTrainingForStudentRequest request) {
@@ -77,7 +80,9 @@ public class TrainingServiceImpl implements TrainingService {
                 .build();
 
         trainingHibernateRepository.saveAndFlush(training);
-        secondMicroservice.putTraining(SecondMicroservicePutTrainingRequest.builder()
+
+        //secondMicroservice.putTraining(SecondMicroservicePutTrainingRequest.builder()
+        secondMicroserviceJmsService.putTraining(SecondMicroservicePutTrainingRequest.builder()
                         .action(SecondMicroservicePutTrainingRequest.ACTION_ADD)
                         .duration(request.getDuration())
                         .date(request.getDate())

@@ -1,8 +1,8 @@
-package org.example.openfeign;
+package org.example.to_externalize;
 
-import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryResponse;
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;

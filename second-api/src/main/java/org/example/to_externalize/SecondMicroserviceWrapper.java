@@ -1,9 +1,10 @@
-package org.example.openfeign;
+package org.example.to_externalize;
+
 
 import com.auth0.jwt.JWT;
-import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryResponse;
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

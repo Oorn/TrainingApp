@@ -2,13 +2,12 @@ package org.example.service;
 
 import org.example.TrainingSummaryEntity;
 import org.example.repository.TrainingSummaryRepository;
-import org.example.requests_responses.SecondMicroservicePutTrainingRequest;
-import org.example.requests_responses.TrainingDurationSummaryRequest;
-import org.example.requests_responses.TrainingDurationSummaryResponse;
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;

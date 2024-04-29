@@ -15,6 +15,12 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: default
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
 server:
   port: 0
 eureka:

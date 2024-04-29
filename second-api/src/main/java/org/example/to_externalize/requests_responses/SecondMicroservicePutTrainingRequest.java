@@ -1,4 +1,4 @@
-package org.example.openfeign.requests_responses;
+package org.example.to_externalize.requests_responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

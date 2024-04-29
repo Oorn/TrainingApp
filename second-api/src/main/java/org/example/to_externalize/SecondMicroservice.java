@@ -1,11 +1,10 @@
-package org.example.openfeign;
+package org.example.to_externalize;
 
 
-import feign.Headers;
-import feign.Param;
-import org.example.openfeign.requests_responses.SecondMicroservicePutTrainingRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryRequest;
-import org.example.requests_responses.training.TrainingDurationSummaryResponse;
+
+import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequest;
+import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
