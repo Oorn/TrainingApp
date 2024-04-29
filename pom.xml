@@ -7,6 +7,7 @@
         <module>main-api</module>
         <module>eureka</module>
         <module>second-api</module>
+        <module>second-api-contract</module>
     </modules>
 
     <parent>
