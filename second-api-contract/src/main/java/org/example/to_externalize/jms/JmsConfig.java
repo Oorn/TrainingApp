@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @EnableJms
 @Configuration
@@ -61,8 +63,21 @@ public class JmsConfig {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
         factory.setMessageConverter(jacksonJmsMessageConverter());
+        factory.setTransactionManager(jmsTransactionManager());
+        factory.setErrorHandler(t -> {
+            System.out.println("Handling error in listening for messages, error: " + t.getMessage());
+        });
+
         return factory;
     }
+
+    //@Bean disabled due to not playing nice with normal transactions
+    public PlatformTransactionManager jmsTransactionManager(){
+        return new JmsTransactionManager(connectionFactory());
+    }
+
+
+
 
 }
 

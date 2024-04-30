@@ -22,6 +22,9 @@ spring:
     password: admin
     packages:
       trust-all: true
+  jms:
+    template:
+      qos-enabled: true
 
 server:
   port: 8081

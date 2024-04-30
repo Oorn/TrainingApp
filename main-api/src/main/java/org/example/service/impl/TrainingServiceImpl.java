@@ -5,7 +5,7 @@ import org.example.domain_entities.*;
 import org.example.exceptions.BadRequestException;
 import org.example.exceptions.NoSuchEntityException;
 import org.example.exceptions.RemovedEntityException;
-import org.example.to_externalize.jms.SecondMicroserviceJmsService;
+import org.example.to_externalize.jms.SecondMicroserviceJms;
 import org.example.to_externalize.SecondMicroserviceWrapper;
 import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
 import org.example.repository.dto.TrainingSearchFilter;
@@ -55,7 +55,7 @@ public class TrainingServiceImpl implements TrainingService {
     SecondMicroserviceWrapper secondMicroservice;
 
     @Autowired
-    SecondMicroserviceJmsService secondMicroserviceJmsService;
+    SecondMicroserviceJms secondMicroserviceJms;
 
 
     @Override
@@ -82,7 +82,7 @@ public class TrainingServiceImpl implements TrainingService {
         trainingHibernateRepository.saveAndFlush(training);
 
         //secondMicroservice.putTraining(SecondMicroservicePutTrainingRequest.builder()
-        secondMicroserviceJmsService.putTraining(SecondMicroservicePutTrainingRequest.builder()
+        secondMicroserviceJms.putTraining(SecondMicroservicePutTrainingRequest.builder()
                         .action(SecondMicroservicePutTrainingRequest.ACTION_ADD)
                         .duration(request.getDuration())
                         .date(request.getDate())

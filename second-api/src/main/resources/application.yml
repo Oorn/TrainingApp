@@ -21,6 +21,10 @@ spring:
     password: admin
     packages:
       trust-all: true
+  jms:
+    template:
+      qos-enabled: true
+
 server:
   port: 0
 eureka:

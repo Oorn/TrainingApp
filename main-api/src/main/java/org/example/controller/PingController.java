@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.example.to_externalize.jms.SecondMicroserviceJmsService;
+import org.example.to_externalize.jms.SecondMicroserviceJms;
 import org.example.to_externalize.SecondMicroserviceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class PingController {
     @Autowired
     SecondMicroserviceWrapper secondMicroservice;
     @Autowired
-    SecondMicroserviceJmsService secondMicroserviceJmsService;
+    SecondMicroserviceJms secondMicroserviceJms;
 
     @GetMapping
     @Operation(summary = "simple ping")
@@ -34,7 +34,13 @@ public class PingController {
     @GetMapping("/jms_micro")
     @Operation(summary = "jms messaging ping")
     public ResponseEntity<Object> pingJms(){
-        secondMicroserviceJmsService.ping();
+        secondMicroserviceJms.ping();
+        return new ResponseEntity<>("pinged with unknown results, check logs", HttpStatus.OK);
+    }
+    @GetMapping("/jms_micro_error")
+    @Operation(summary = "jms messaging ping forcing error")
+    public ResponseEntity<Object> pingJmsError(){
+        secondMicroserviceJms.errorPing();
         return new ResponseEntity<>("pinged with unknown results, check logs", HttpStatus.OK);
     }
 

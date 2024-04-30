@@ -1,5 +1,6 @@
 package org.example.jms;
 
+import org.example.to_externalize.jms.SecondMicroserviceJms;
 import org.example.to_externalize.requests_responses.SecondMicroservicePutTrainingRequest;
 import org.example.service.TrainingSummaryService;
 import org.slf4j.Logger;
@@ -10,9 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SecondMicroserviceListener {
-    private static final String QUEUE_NAME_BASE = "second_micro.queue";
-    private static final String QUEUE_PING = QUEUE_NAME_BASE + ".ping";
-    private static final String QUEUE_PUT_TRAINING = QUEUE_NAME_BASE + ".put_training";
+    private static final String QUEUE_PING = SecondMicroserviceJms.QUEUE_PING;
+
+    private static final String QUEUE_ERROR_PING = SecondMicroserviceJms.QUEUE_ERROR_PING;
+    private static final String QUEUE_PUT_TRAINING = SecondMicroserviceJms.QUEUE_PUT_TRAINING;
 
     private static final Logger LOG = LoggerFactory.getLogger(SecondMicroserviceListener.class);
 
@@ -23,6 +25,12 @@ public class SecondMicroserviceListener {
     public void receivePing(String message) {
         System.out.println("ping received: " + message);
     }
+
+    @JmsListener(destination = QUEUE_ERROR_PING)
+    public void receiveErrorPing(String message) {
+        throw new RuntimeException("error ping received: " + message);
+    }
+
 
     @JmsListener(destination = QUEUE_PUT_TRAINING)
     public void receiveMessage(SecondMicroservicePutTrainingRequest request) {
