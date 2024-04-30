@@ -122,6 +122,15 @@
     </properties>
     <build>
         <finalName>TrainingApp-second-contract</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layout>JAR</layout>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
