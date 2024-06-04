@@ -20,7 +20,7 @@ public class ServiceLogger {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Around("within(@org.springframework.stereotype.Repository *) && execution(public * *(..))")
+    @Around("within(@org.springframework.stereotype.Service *) && execution(public * *(..))")
     public Object logServiceEvents(ProceedingJoinPoint joinPoint) throws Throwable {
         String message = "transaction: ";
         message += backtraceProvider.getCurrentBacktrace().getUuid();
