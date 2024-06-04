@@ -21,18 +21,16 @@ public class TrainingSummaryEntity {
     @Id
     private String id;
 
-    //@Indexed
+    @Indexed
     private  String username;
 
-    //@Indexed
     private String firstName;
 
-    //@Indexed
     private String lastName;
 
     private boolean isActive;
 
-    //@Indexed
+    @Indexed
     private LocalDateTime month;
 
     private long duration;

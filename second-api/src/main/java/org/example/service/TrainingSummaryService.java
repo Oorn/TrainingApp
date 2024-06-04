@@ -60,24 +60,27 @@ public class TrainingSummaryService {
             //new entity done
         }
 
+
         //irrelevant field update done
         //update irrelevant fields of other entities from same username
-        List<TrainingSummaryEntity> list = repository.findAllByUsername(request.getUsername());
-        List<TrainingSummaryEntity> toSave = new ArrayList<>();
-        list.forEach(e -> {
-            boolean needSave = !e.getFirstName().equals(request.getFirstName());
-            if (!e.getLastName().equals(request.getLastName()))
-                needSave = true;
-            if (e.isActive() != request.isActive())
-                needSave = true;
-            if (needSave) {
-                e.setFirstName(request.getFirstName());
-                e.setLastName(request.getLastName());
-                e.setActive(request.isActive());
-                toSave.add(e);
-            }
-        });
-        repository.saveAll(toSave);
+        boolean needUpdates = !entity.getFirstName().equals(request.getFirstName());
+        if (!entity.getLastName().equals(request.getLastName()))
+            needUpdates = true;
+        if (entity.isActive() != request.isActive())
+            needUpdates = true;
+
+        if (needUpdates) {
+            List<TrainingSummaryEntity> list = repository.findAllByUsername(request.getUsername());
+            list.forEach(e -> {
+                            e.setFirstName(request.getFirstName());
+                            e.setLastName(request.getLastName());
+                            e.setActive(request.isActive());});
+            repository.saveAll(list);
+            entity.setFirstName(request.getFirstName());
+            entity.setLastName(request.getLastName());
+            entity.setActive(request.isActive());
+        }
+
         repository.save(entity);
 
     }
