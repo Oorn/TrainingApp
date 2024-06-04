@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ public class TrainingSummaryService {
         int year =  request.getDate().toLocalDateTime().getYear();
         int month = request.getDate().toLocalDateTime().getMonth().getValue();
         long durationDelta = request.getDuration().toMinutes();
-        Timestamp monthDate = Timestamp.valueOf(LocalDate.of(year, month, 1).atStartOfDay());
+        LocalDateTime monthDate = LocalDate.of(year, month, 1).atStartOfDay();
 
         TrainingSummaryEntity entity;
         Optional<TrainingSummaryEntity> optionalExistingSummary = repository.findTrainingSummaryEntityByMonthAndUsername(monthDate, request.getUsername());
@@ -80,10 +82,10 @@ public class TrainingSummaryService {
 
     }
     public TrainingDurationSummaryResponse getTrainingSummary(TrainingDurationSummaryRequest request, String username) {
-        List<Timestamp> months;
+        List<LocalDateTime> months;
         try {
             months = request.getMonths().stream()
-                    .map(p -> Timestamp.valueOf(LocalDate.of(p.getFirst(), p.getSecond(), 1).atStartOfDay()))
+                    .map(p -> LocalDate.of(p.getFirst(), p.getSecond(), 1).atStartOfDay())
                     .collect(Collectors.toList());
         }
         catch (Exception ex) {

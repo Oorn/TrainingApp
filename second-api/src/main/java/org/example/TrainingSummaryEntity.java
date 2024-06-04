@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
@@ -16,22 +18,22 @@ import java.sql.Timestamp;
 @Document(collection = "training_summaries")
 public class TrainingSummaryEntity {
 
-    @EqualsAndHashCode.Include
-    @MongoId
-    private  long id;
+    @Id
+    private String id;
 
-    @Indexed(unique = true)
+    //@Indexed
     private  String username;
 
-    @Indexed
+    //@Indexed
     private String firstName;
 
-    @Indexed
+    //@Indexed
     private String lastName;
 
     private boolean isActive;
 
-    private Timestamp month;
+    //@Indexed
+    private LocalDateTime month;
 
     private long duration;
 

@@ -40,7 +40,7 @@ public class PopulateTrainingSummary {
                                         .action(SecondMicroservicePutTrainingRequest.ACTION_ADD)
                                         .duration(Duration.between(t.getTrainingDateFrom().toLocalDateTime(), t.getTrainingDateTo().toLocalDateTime()))
                                         .date(t.getTrainingDateFrom())
-                                        .firstName(t.getPartnership().getMentor().getUser().getFirstName())
+                                        .username(t.getPartnership().getMentor().getUser().getUserName())
                                         .isActive(t.getPartnership().getMentor().getUser().isActive())
                                         .firstName(t.getPartnership().getMentor().getUser().getFirstName())
                                         .lastName(t.getPartnership().getMentor().getUser().getLastName())
