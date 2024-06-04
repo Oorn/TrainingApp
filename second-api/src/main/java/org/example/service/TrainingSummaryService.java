@@ -124,4 +124,7 @@ public class TrainingSummaryService {
                 .active(foundEntities.get(0).isActive())
                 .build();
     }
+    public long getTrainingSummaryNumber() {
+        return repository.count();
+    }
 }

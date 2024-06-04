@@ -1,6 +1,9 @@
 package org.example;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,31 +13,26 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "training_summary")
+@Document(collection = "training_summaries")
 public class TrainingSummaryEntity {
 
     @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @MongoId
     private  long id;
 
-    @Column(name = "username")
+    @Indexed(unique = true)
     private  String username;
 
-    @Column(name = "first_name")
+    @Indexed
     private String firstName;
 
-    @Column(name = "last_name")
+    @Indexed
     private String lastName;
 
-    @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "month_start")
     private Timestamp month;
 
-    @Column(name = "duration")
     private long duration;
 
 }

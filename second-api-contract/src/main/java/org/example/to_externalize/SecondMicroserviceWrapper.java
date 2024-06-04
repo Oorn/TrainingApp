@@ -7,6 +7,8 @@ import org.example.to_externalize.requests_responses.TrainingDurationSummaryRequ
 import org.example.to_externalize.requests_responses.TrainingDurationSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -52,6 +54,12 @@ public class SecondMicroserviceWrapper{
     public TrainingDurationSummaryResponse getTrainingSummary(TrainingDurationSummaryRequest request, String username) {
         updateToken();
         return service.getTrainingSummary(token, request, username);
+    }
+
+    public Long getTrainingSummaryCount() {
+        updateToken();
+        return service.getTrainingSummaryCount(token);
+
     }
 
     public String login(String password, String username) {

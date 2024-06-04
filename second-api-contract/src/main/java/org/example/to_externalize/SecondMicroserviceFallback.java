@@ -40,6 +40,11 @@ public class SecondMicroserviceFallback implements SecondMicroservice{
     }
 
     @Override
+    public Long getTrainingSummaryCount(String jwt) {
+        return -1L;
+    }
+
+    @Override
     public String login(String password, String username) {
         wrapper.resetToken();
         return null;

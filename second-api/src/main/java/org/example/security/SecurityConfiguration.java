@@ -47,9 +47,9 @@ public class SecurityConfiguration{
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/actuator/**", "/login/**").permitAll()
-                .antMatchers("/ping/**", "/training/**","/training_summary/**").authenticated()
+                .antMatchers("/ping/**", "/training/**","/training_summary/**", "/training_summary_count").authenticated()
                 .anyRequest()
-                .denyAll();
+                .permitAll();
 
         http.addFilterBefore(authFilterWrapper.getAuthFilter(), BasicAuthenticationFilter.class);
         return http.build();

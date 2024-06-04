@@ -36,6 +36,11 @@ public class SummaryController {
         return service.getTrainingSummary(request, username);
     }
 
+    @GetMapping("/training_summary_count")
+    Long getTrainingSummaryCount(){
+        return service.getTrainingSummaryNumber();
+    }
+
     @PostMapping("/login/{username}")
     String login(@RequestBody String password,
                  @PathVariable(name = "username") String username) {

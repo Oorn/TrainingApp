@@ -15,6 +15,8 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: default
+    mongodb:
+      uri: mongodb+srv://epam-learn:1fBajmXpG7jNEmrR@mongodb-test.pfcyb8s.mongodb.net/test_db?retryWrites=true&w=majority&appName=MongoDB-test
   activemq:
     broker-url: tcp://localhost:61616
     user: admin

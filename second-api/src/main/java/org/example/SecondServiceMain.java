@@ -10,4 +10,6 @@ public class SecondServiceMain {
     public static void main(String[] args) {
         SpringApplication.run(SecondServiceMain.class, args);
     }
+
+
 }

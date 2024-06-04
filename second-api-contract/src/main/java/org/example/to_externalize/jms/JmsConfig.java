@@ -63,7 +63,7 @@ public class JmsConfig {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
         factory.setMessageConverter(jacksonJmsMessageConverter());
-        factory.setTransactionManager(jmsTransactionManager());
+        //factory.setTransactionManager(jmsTransactionManager());
         factory.setErrorHandler(t -> {
             System.out.println("Handling error in listening for messages, error: " + t.getMessage());
         });

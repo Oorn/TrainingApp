@@ -22,6 +22,9 @@ public interface SecondMicroservice {
     TrainingDurationSummaryResponse getTrainingSummary(@RequestHeader("jwt") String jwt, @RequestBody TrainingDurationSummaryRequest request,
                                                        @PathVariable(name = "username")  String username);
 
+    @GetMapping("/training_summary_count")
+    Long getTrainingSummaryCount(@RequestHeader("jwt") String jwt);
+
     @PostMapping("/login/{username}")
     String login(@RequestBody String password,
                  @PathVariable(name = "username") String username);
