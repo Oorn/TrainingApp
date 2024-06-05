@@ -13,19 +13,20 @@ import org.springframework.web.bind.annotation.*;
 public interface SecondMicroservice {
 
     @GetMapping("/ping")
-    String ping(@RequestHeader("jwt") String jwt);
+    String ping(@RequestHeader("jwt") String jwt, @RequestHeader("logging-uuid") String uuid);
 
     @PutMapping("/training")
-    void putTraining(@RequestHeader("jwt") String jwt, @RequestBody SecondMicroservicePutTrainingRequest req);
+    void putTraining(@RequestHeader("jwt") String jwt, @RequestHeader("logging-uuid") String uuid, @RequestBody SecondMicroservicePutTrainingRequest req);
 
     @PostMapping("/training_summary/{username}")
-    TrainingDurationSummaryResponse getTrainingSummary(@RequestHeader("jwt") String jwt, @RequestBody TrainingDurationSummaryRequest request,
+    TrainingDurationSummaryResponse getTrainingSummary(@RequestHeader("jwt") String jwt, @RequestHeader("logging-uuid") String uuid, @RequestBody TrainingDurationSummaryRequest request,
                                                        @PathVariable(name = "username")  String username);
 
     @GetMapping("/training_summary_count")
-    Long getTrainingSummaryCount(@RequestHeader("jwt") String jwt);
+    Long getTrainingSummaryCount(@RequestHeader("jwt") String jwt, @RequestHeader("logging-uuid") String uuid);
 
     @PostMapping("/login/{username}")
-    String login(@RequestBody String password,
+    String login(@RequestHeader("logging-uuid") String uuid,
+                 @RequestBody String password,
                  @PathVariable(name = "username") String username);
 }

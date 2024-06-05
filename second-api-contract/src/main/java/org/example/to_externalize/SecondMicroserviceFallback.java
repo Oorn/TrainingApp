@@ -17,17 +17,17 @@ public class SecondMicroserviceFallback implements SecondMicroservice{
     SecondMicroserviceWrapper wrapper;
 
     @Override
-    public String ping(String jwt) {
+    public String ping(String jwt, String uuid) {
         return "second service not pong";
     }
 
     @Override
-    public void putTraining(String jwt, SecondMicroservicePutTrainingRequest req) {
+    public void putTraining(String jwt, String uuid, SecondMicroservicePutTrainingRequest req) {
         wrapper.resetToken();
     }
 
     @Override
-    public TrainingDurationSummaryResponse getTrainingSummary(String jwt, TrainingDurationSummaryRequest request, String username) {
+    public TrainingDurationSummaryResponse getTrainingSummary(String jwt, String uuid, TrainingDurationSummaryRequest request, String username) {
         wrapper.resetToken();
         return TrainingDurationSummaryResponse.builder()
                 .executionStatus(TrainingDurationSummaryResponse.STATUS_SERVICE_DOWN)
@@ -40,12 +40,12 @@ public class SecondMicroserviceFallback implements SecondMicroservice{
     }
 
     @Override
-    public Long getTrainingSummaryCount(String jwt) {
+    public Long getTrainingSummaryCount(String jwt, String uuid) {
         return -1L;
     }
 
     @Override
-    public String login(String password, String username) {
+    public String login(String uuid, String password, String username) {
         wrapper.resetToken();
         return null;
     }

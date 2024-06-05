@@ -46,7 +46,7 @@ public class ControllerLogger {
                 message += " request body: " + new String(request.getContentAsByteArray()).lines().reduce("", String::concat);
             }
             catch (Throwable t) {
-                message += "WARNING - could not request body";
+                message += "WARNING - could not read request body";
             }
 
         }
