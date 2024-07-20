@@ -53,7 +53,7 @@ public class TestContainersEnvironment {
         eurekaServer.start();
         mainApi.start();
         secondApi.start();
-        Thread.sleep(30000);
+        Thread.sleep(50000);
         containersAreRunning = true;
         return this;
     }

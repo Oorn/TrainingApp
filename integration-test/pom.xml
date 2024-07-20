@@ -120,6 +120,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- this is necessary to handle 401s responses by RestTemplate -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.11</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

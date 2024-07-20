@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
         cucumber {
-            sh 'mvn clean package spring-boot:repackage'
+            sh 'mvn -pl -integration-test clean verify spring-boot:repackage'
         }
     }
     //stage('SonarQube analysis') {
