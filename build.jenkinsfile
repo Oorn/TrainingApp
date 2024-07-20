@@ -6,7 +6,7 @@ pipeline {
       }
   stages {
     stage('Build') {
-        steps {
+        cucumber {
             sh 'mvn clean package spring-boot:repackage'
         }
     }
@@ -14,7 +14,7 @@ pipeline {
     //    environment {
     //      SCANNER_HOME = tool 'sonar-scanner'
     //    }
-    //    steps {
+    //    cucumber {
     //    withSonarQubeEnv(credentialsId: '022985f2-255c-41a3-9c8a-56019b0bccdb', installationName: 'sonar-server') {
     //         sh '''$SCANNER_HOME/bin/sonar-scanner \
     //         -Dsonar.projectKey=projectKey \
@@ -28,19 +28,19 @@ pipeline {
     //     }
     //}
     //stage('Sonar Quality Gate') {
-    //     steps {
+    //     cucumber {
     //        timeout(time: 5, unit: 'MINUTES') {
     //            waitForQualityGate abortPipeline: true
     //        }
     //     }
     //}
     stage ('Archive') {
-        steps {
+        cucumber {
             archiveArtifacts artifacts: '**/*.jar', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
         }
     }
     stage('Deploy') {
-        steps {
+        cucumber {
             build wait: false, job: 'deploy-eureka'
             build wait: false, job: 'deploy'
             build wait: false, job: 'deploy-second'

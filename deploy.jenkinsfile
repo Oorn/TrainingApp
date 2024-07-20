@@ -2,12 +2,12 @@ pipeline {
   agent any
   stages {
     stage('Install Jar') {
-        steps {
+        cucumber {
             copyArtifacts filter: '**/TrainingApp-main.jar', projectName: 'build'
         }
     }
     stage('Run Jar') {
-        steps {
+        cucumber {
             sh '''
             java -jar ${WORKSPACE}/main-api/target/TrainingApp-main.jar
             '''

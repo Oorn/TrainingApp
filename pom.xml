@@ -8,6 +8,7 @@
         <module>eureka</module>
         <module>second-api</module>
         <module>second-api-contract</module>
+        <module>integration-test</module>
     </modules>
 
     <parent>
@@ -48,6 +49,11 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*IntegrationTest.java</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
@@ -82,6 +88,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>

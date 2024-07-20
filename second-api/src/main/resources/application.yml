@@ -43,3 +43,23 @@ management:
 jwt:
   secret: 6013fba8-50ec-4830-a6b6-1c2b7ef27b3b
   expiration: 3600000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+#  activemq:
+#    broker-url: tcp://localhost:5656
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA_URI:http://localhost:5657/eureka}
+  activemq:
+    broker-url: tcp://activemq:61616
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://eureka:8761/eureka}
+server:
+  port: 8080

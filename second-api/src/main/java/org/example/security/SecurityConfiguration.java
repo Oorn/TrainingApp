@@ -44,10 +44,10 @@ public class SecurityConfiguration{
                 .and()
                 .authorizeRequests()
                 //ant matchers
-                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**", "/ping/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/actuator/**", "/login/**").permitAll()
-                .antMatchers("/ping/**", "/training/**","/training_summary/**", "/training_summary_count").authenticated()
+                .antMatchers("/training/**","/training_summary/**", "/training_summary_count").authenticated()
                 .anyRequest()
                 .permitAll();
 

@@ -64,8 +64,16 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: test
   datasource:
-    url: jdbc:postgresql://localhost:5432/training_app_prod
+    url: jdbc:postgresql://database:5432/training_app
     username: postgres
     password: postgres
+  activemq:
+    broker-url: tcp://activemq:61616
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://eureka:8761/eureka}
+server:
+  port: 8080
