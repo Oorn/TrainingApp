@@ -10,21 +10,12 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PingSteps {
-    ResponseEntity<String> lastResponse;
     @Autowired
     private TestRestTemplate restTemplate;
-
-
     @Autowired
-    private ContainerConfigIntegrationTest containers;
+    private TestContainersEnvironment containers;
 
-    //{
-    //    try {
-    //        containers = CucumberContext.containers();
-    //    } catch (InterruptedException e) {
-    //        throw new RuntimeException(e);
-    //    }
-    //}
+    ResponseEntity<String> lastResponse;
 
     @When("main service receives Get on {string}")
     public void mainServiceReceivesGetOn(String arg0) {
